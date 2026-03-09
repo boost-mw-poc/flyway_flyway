@@ -31,6 +31,8 @@ import static org.flywaydb.core.internal.configuration.models.UnknownParameterMo
 import static org.flywaydb.core.internal.util.ExceptionUtils.getFlywayExceptionMessage;
 import static org.flywaydb.core.internal.util.ExceptionUtils.getRootCause;
 
+import org.flywaydb.core.api.CoreErrorCode;
+import org.flywaydb.core.internal.configuration.models.UnknownParameterModel.Reason;
 import tools.jackson.databind.DeserializationFeature;
 import tools.jackson.databind.MapperFeature;
 import tools.jackson.databind.ObjectMapper;
@@ -197,7 +199,7 @@ public class ModernConfigurationManager implements ConfigurationManager {
 
         cfg.setWorkingDirectory(workingDirectory);
 
-        configurePlugins(config, cfg);
+        configurePlugins(config, cfg, commandLineArguments.shouldIgnoreUnrecognizedParameters());
 
         loadJarDirsAndAddToClasspath(installDirectory, cfg);
 
@@ -224,7 +226,7 @@ public class ModernConfigurationManager implements ConfigurationManager {
         }
     }
 
-    private void configurePlugins(final ConfigurationModel config, final Configuration cfg) {
+    private void configurePlugins(final ConfigurationModel config, final Configuration cfg, final boolean ignoreUnrecognizedParameters) {
         final List<String> configuredPluginParameters = new ArrayList<>();
         for (final ConfigurationExtension configurationExtension : cfg.getPluginRegister()
             .getInstancesOf(ConfigurationExtension.class)) {
@@ -260,7 +262,7 @@ public class ModernConfigurationManager implements ConfigurationManager {
             configurationExceptions.add(e);
         }
 
-        if (!configurationExceptions.isEmpty()) {
+        if (!configurationExceptions.isEmpty() && !ignoreUnrecognizedParameters) {
             combineConfigurationExceptions(configurationExceptions);
         }
     }
@@ -467,10 +469,16 @@ public class ModernConfigurationManager implements ConfigurationManager {
         return pluginParametersWhichShouldHaveBeenConfigured;
     }
 
-    private static void combineConfigurationExceptions(final Iterable<? extends FlywayException> configurationExceptions) {
+    private static void combineConfigurationExceptions(final Collection<? extends FlywayException> configurationExceptions) {
         final StringBuilder exceptionMessage = new StringBuilder("Failed to configure parameters:").append(System.lineSeparator());
         configurationExceptions.forEach(e -> exceptionMessage.append(e.getMessage()).append(System.lineSeparator()));
-        final FlywayException flywayException = new FlywayException(exceptionMessage.toString());
+
+        CoreErrorCode errorCode = configurationExceptions.stream()
+            .allMatch(ex -> ex.getErrorCode() == CoreErrorCode.CONFIGURATION_RECOVERABLE)
+            ? CoreErrorCode.CONFIGURATION_RECOVERABLE
+            : CoreErrorCode.CONFIGURATION;
+
+        final FlywayException flywayException = new FlywayException(exceptionMessage.toString(), errorCode);
         configurationExceptions.forEach(flywayException::addSuppressed);
         throw flywayException;
     }
@@ -493,18 +501,22 @@ public class ModernConfigurationManager implements ConfigurationManager {
         if (rootConfigurationsIsEmpty) {
 
         final StringBuilder exceptionMessage = new StringBuilder();
+        CoreErrorCode errorCode = CoreErrorCode.CONFIGURATION_RECOVERABLE;
 
         for (Map.Entry<String, ? extends List<String>> entry : missingParams.entrySet()) {
             String namespace = entry.getKey();
             List<String> unknownParams = entry.getValue();
             for (String param : unknownParams) {
                 UnknownParameterModel unknownParameterModel = resolveUnknownParameter(model, namespace, param, prefix);
+                if (unknownParameterModel.reason() == Reason.UNKNOWN) {
+                    errorCode = CoreErrorCode.CONFIGURATION;
+                }
                 exceptionMessage.append(unknownParameterModel).append("\n");
             }
         }
 
         exceptionMessage.deleteCharAt(exceptionMessage.length() - 1);
-        throw new FlywayException(exceptionMessage.toString());
+        throw new FlywayException(exceptionMessage.toString(), errorCode);
 
         }
 

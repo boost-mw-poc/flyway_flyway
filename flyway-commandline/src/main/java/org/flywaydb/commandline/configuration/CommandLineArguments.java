@@ -535,6 +535,13 @@ public class CommandLineArguments {
         return getEnvironmentConfigurationFromArgs(args);
     }
 
+    public boolean shouldIgnoreUnrecognizedParameters() {
+        // The `init` command can update an existing TOML file to fix configuration errors.
+        // Only allow this when `init` is run on its own; if it is chained with other commands, do not allow it.
+        List<String> operations = getOperations();
+        return operations.contains("init") && operations.size() == 1;
+    }
+
     @RequiredArgsConstructor
     public enum Color {
         ALWAYS("always"),

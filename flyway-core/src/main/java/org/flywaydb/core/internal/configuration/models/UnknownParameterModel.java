@@ -30,9 +30,15 @@ import org.flywaydb.core.internal.util.StringUtils;
 
 public record UnknownParameterModel(String rawKey, Reason reason, Source source, List<String> possibleValues, String replacement) {
     private static final String CLEAN_ON_VALIDATION_ERROR = "flyway.cleanOnValidationError";
+    private static final String CHECK_MINOR_TOLERANCE = "check.minorTolerance";
+    private static final String CHECK_MINOR_RULES = "check.minorRules";
+    private static final String CHECK_MAJOR_RULES = "check.majorRules";
 
     private static final Map<String, String> MOVED_OR_REMOVED_PARAMS = Map.ofEntries(
-        Map.entry(CLEAN_ON_VALIDATION_ERROR, "")
+        Map.entry(CLEAN_ON_VALIDATION_ERROR, ""),
+        Map.entry(CHECK_MINOR_TOLERANCE, ""),
+        Map.entry(CHECK_MINOR_RULES, ""),
+        Map.entry(CHECK_MAJOR_RULES, "")
         );
 
     public enum Reason {

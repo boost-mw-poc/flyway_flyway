@@ -8,6 +8,40 @@
 </div>
 <div class="col-md-9">
   <div class="release">
+        <h2 id="12.1.0">Flyway 12.1.0 (2026-03-09)</h2>
+
+        <h3>New features</h3>
+        <ul>
+            <li>Flyway now supports using the 'init' command to automatically update TOML configuration files for Desktop users</li>
+        </ul>
+
+        <h3>Changes</h3>
+        <ul>
+            <li>InsertRowLock now supports custom locking strategies for databases without primary key support</li>
+            <li>Removed SQL Server 'IgnoreSynonymDependencies' comparison option</li>
+            <li>changed the snapshot history limit default to 5, so that ad-hoc rollbacks are available for recent deployments by default</li>
+        </ul>
+
+        <h3>Database compatibility</h3>
+        <ul>
+            <li>Foundational support for Babelfish added.</li>
+        </ul>
+
+        <h3>Bug fixes</h3>
+        <ul>
+            <li>Fix NullPointerException when executing callbacks where callback name is null</li>
+            <li>drift resolution folder path in JSON output now serializes as an absolute file path string instead of a URI</li>
+        </ul>
+
+        <h3>Library upgrades</h3>
+        <ul>
+            <li>Upgrade Jetty-server from 12.0.21 to 12.1.6</li>
+            <li>Upgrade Jackson from 3.0.4 to 3.1.0</li>
+        </ul>
+
+  </div>
+
+  <div class="release">
         <h2 id="12.0.3">Flyway 12.0.3 (2026-02-27)</h2>
 
         <h3>Bug fixes</h3>

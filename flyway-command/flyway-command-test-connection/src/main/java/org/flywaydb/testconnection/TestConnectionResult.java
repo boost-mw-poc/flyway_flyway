@@ -25,7 +25,7 @@ import org.flywaydb.core.api.output.OperationResult;
 
 @SuppressWarnings("WeakerAccess")
 public record TestConnectionResult(Collection<String> successfulConnections) implements OperationResult {
-    public TestConnectionResult(final Collection<String> successfulConnections) {
-        this.successfulConnections = List.copyOf(successfulConnections);
+    public TestConnectionResult {
+        successfulConnections = List.copyOf(successfulConnections);
     }
 }

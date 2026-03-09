@@ -19,10 +19,10 @@
  */
 package org.flywaydb.database.sqlserver.babelfish;
 
+import lombok.CustomLog;
 import org.flywaydb.database.sqlserver.SQLServerDatabaseType;
 import org.flywaydb.core.api.configuration.Configuration;
 import org.flywaydb.core.internal.database.base.Database;
-import org.flywaydb.core.internal.exception.FlywaySqlException;
 import org.flywaydb.core.internal.jdbc.JdbcConnectionFactory;
 import org.flywaydb.core.internal.jdbc.JdbcTemplate;
 import org.flywaydb.core.internal.jdbc.StatementInterceptor;
@@ -30,6 +30,7 @@ import org.flywaydb.core.internal.jdbc.StatementInterceptor;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+@CustomLog
 public class BabelfishDatabaseType extends SQLServerDatabaseType {
     @Override
     protected boolean supportsJTDS() {
@@ -54,7 +55,8 @@ public class BabelfishDatabaseType extends SQLServerDatabaseType {
                         "SELECT CAST(SERVERPROPERTY('Babelfish') AS VARCHAR(10))");
                 return "1".equals(babelfish);
             } catch (SQLException e) {
-                throw new FlywaySqlException("Unable to check Babelfish property.", e);
+                LOG.debug("Unable to check Babelfish property - assuming not Babelfish. " + e.getMessage());
+                return false;
             }
         }
 
