@@ -43,14 +43,6 @@
             </includes>
             <fileMode>755</fileMode>
         </fileSet>
-        <fileSet>
-            <directory>../flyway-comparison/flyway-comparison-engines/src/main/resources/flyway-comparison/macos-x64</directory>
-            <outputDirectory>lib/flyway-comparison</outputDirectory>
-            <includes>
-                <include>**/*</include>
-            </includes>
-            <fileMode>755</fileMode>
-        </fileSet>
         <!-- [/redgate] -->
     </fileSets>
 </assembly>

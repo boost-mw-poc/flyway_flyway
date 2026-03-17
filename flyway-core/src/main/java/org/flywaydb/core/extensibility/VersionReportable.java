@@ -17,22 +17,15 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.flywaydb.core.internal.database.base;
+package org.flywaydb.core.extensibility;
 
-import static org.flywaydb.core.internal.util.FlywayDbWebsiteLinks.COMMUNITY_CONTRIBUTED_DATABASES;
 import org.flywaydb.core.api.configuration.Configuration;
-import org.flywaydb.core.extensibility.VersionReportable;
-import org.flywaydb.core.internal.database.DatabaseType;
 
-public interface CommunityDatabaseType extends DatabaseType, VersionReportable {
-
-    default String announcementForCommunitySupport() {
-        return getName() + " is a community contributed database, see "+ COMMUNITY_CONTRIBUTED_DATABASES + " for more details";
-    }
-
-    @Override
-    default String getPluginVersion(final Configuration config) {
-        return null;
-    }
-
+/**
+ * Marker interface for plugins that report a version string in the {@code flyway version} command.
+ * Only plugins implementing this interface will be instantiated when collecting version information,
+ * avoiding the cost of loading all plugins.
+ */
+public interface VersionReportable extends Plugin {
+    String getPluginVersion(Configuration config);
 }

@@ -19,7 +19,6 @@
  */
 package org.flywaydb.verb.migrate.migrators;
 
-import static org.flywaydb.core.internal.util.FileUtils.getParentDir;
 import static org.flywaydb.nc.utils.VerbUtils.toMigrationText;
 
 import java.nio.file.Paths;
@@ -113,12 +112,12 @@ public class ExecutableMigrator extends Migrator<NativeConnectorsDatabase> {
             } else {
                 LOG.debug("Starting migration of " + migrationText + " ...");
                 progress.log("Starting migration of " + migrationInfo.getScript() + " ...");
-                if (!migrationInfo.getType().isUndo()) {
-                    callbackManager.handleEvent(Event.BEFORE_EACH_MIGRATE,
-                        experimentalDatabase,
-                        configuration,
-                        parsingContext);
-                }
+                final Event beforeEach = migrationInfo.getType().isUndo() ? Event.BEFORE_EACH_UNDO : Event.BEFORE_EACH_MIGRATE;
+                callbackManager.handleEvent(beforeEach,
+                    experimentalDatabase,
+                    configuration,
+                    parsingContext);
+
                 if (!migrationInfo.getType().isUndo()) {
                     LOG.info("Migrating " + migrationText);
                     progress.log("Migrating " + migrationInfo.getScript());
@@ -136,26 +135,25 @@ public class ExecutableMigrator extends Migrator<NativeConnectorsDatabase> {
                     executor.finishExecution(experimentalDatabase, configuration);
                 }
 
-                if (!migrationInfo.getType().isUndo()) {
-                    callbackManager.handleEvent(Event.AFTER_EACH_MIGRATE,
-                        experimentalDatabase,
-                        configuration,
-                        parsingContext);
-                }
+                final Event afterEach = migrationInfo.getType().isUndo() ? Event.AFTER_EACH_UNDO : Event.AFTER_EACH_MIGRATE;
+                callbackManager.handleEvent(afterEach,
+                    experimentalDatabase,
+                    configuration,
+                    parsingContext);
             }
         } catch (final Exception e) {
             watch.stop();
             final int totalTimeMillis = (int) watch.getTotalTimeMillis();
+
             handleMigrationError(e,
                 experimentalDatabase,
+                callbackManager,
+                parsingContext,
                 migrationInfo,
                 migrateResult,
-                configuration.getTable(),
-                configuration.isOutOfOrder(),
+                configuration,
                 installedRank,
-                experimentalDatabase.getInstalledBy(configuration),
-                totalTimeMillis,
-                configuration.getCurrentEnvironmentName());
+                totalTimeMillis);
         }
 
         watch.stop();
@@ -179,15 +177,14 @@ public class ExecutableMigrator extends Migrator<NativeConnectorsDatabase> {
 
     private void handleMigrationError(final Exception e,
         final NativeConnectorsDatabase experimentalDatabase,
+        final CallbackManager callbackManager,
+        final ParsingContext context,
         final MigrationInfo migrationInfo,
         final MigrateResult migrateResult,
-        final String schemaHistoryTableName,
-        final boolean outOfOrder,
+        final Configuration configuration,
         final int installedRank,
-        final String installedBy,
-        final int totalTimeMillis,
-        final String environment) {
-        final String migrationText = toMigrationText(migrationInfo, false, experimentalDatabase, outOfOrder);
+        final int totalTimeMillis) {
+        final String migrationText = toMigrationText(migrationInfo, false, experimentalDatabase, configuration.isOutOfOrder());
         final String failedMsg;
         if (!migrationInfo.getType().isUndo()) {
             failedMsg = "Migration of " + migrationText + " failed!";
@@ -199,17 +196,23 @@ public class ExecutableMigrator extends Migrator<NativeConnectorsDatabase> {
         migrateResult.setSuccess(false);
 
         LOG.error(failedMsg + " Please restore backups and roll back database and code!");
-        updateSchemaHistoryTable(schemaHistoryTableName,
+        updateSchemaHistoryTable(configuration.getTable(),
             migrationInfo,
             totalTimeMillis,
             installedRank,
             experimentalDatabase,
-            installedBy,
+            experimentalDatabase.getInstalledBy(configuration),
             false);
+
+        final Event afterEach = migrationInfo.getType().isUndo() ? Event.AFTER_EACH_UNDO_ERROR : Event.AFTER_EACH_MIGRATE_ERROR;
+        callbackManager.handleEvent(afterEach,
+            experimentalDatabase,
+            configuration,
+            context);
 
         final String message = experimentalDatabase.redactUrl(e.getMessage());
         throw new FlywayMigrateException(migrationInfo,
-            calculateErrorMessage(message, migrationInfo, environment),
+            calculateErrorMessage(message, migrationInfo, configuration.getCurrentEnvironmentName()),
             true,
             migrateResult);
     }

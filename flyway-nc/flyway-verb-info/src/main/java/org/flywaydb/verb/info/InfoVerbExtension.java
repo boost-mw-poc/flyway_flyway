@@ -20,9 +20,12 @@
 package org.flywaydb.verb.info;
 
 import lombok.CustomLog;
+import org.flywaydb.core.api.FlywayException;
+import org.flywaydb.core.api.callback.Event;
 import org.flywaydb.core.api.configuration.Configuration;
 import org.flywaydb.core.internal.nc.NativeConnectorsDatabase;
 import org.flywaydb.core.extensibility.VerbExtension;
+import org.flywaydb.nc.callbacks.CallbackManager;
 import org.flywaydb.nc.utils.VerbUtils;
 import org.flywaydb.nc.info.NativeConnectorsMigrationInfoService;
 import org.flywaydb.nc.preparation.PreparationContext;
@@ -39,16 +42,32 @@ public class InfoVerbExtension implements VerbExtension {
 
         final PreparationContext context = PreparationContext.get(configuration, false);
 
-        final NativeConnectorsDatabase database = context.getDatabase();
+        final NativeConnectorsDatabase<?> database = context.getDatabase();
+        final CallbackManager callbackManager = new CallbackManager(configuration, context.getCallbackResources());
+
+        callbackManager.handleEvent(Event.BEFORE_INFO, database, configuration, context.getParsingContext());
+
         if (!database.schemaHistoryTableExists(configuration.getTable())) {
             LOG.info("Schema history table "
                 + database.quote(database.getCurrentSchema(), configuration.getTable())
                 + " does not exist yet");
         }
 
-        return new NativeConnectorsMigrationInfoService(context.getMigrations(),
-            configuration,
-            database.getName(),
-            database.allSchemasEmpty(VerbUtils.getAllSchemas(configuration.getSchemas(), database.getCurrentSchema())));
+        final NativeConnectorsMigrationInfoService infoResult;
+        try {
+            infoResult = new NativeConnectorsMigrationInfoService(context.getMigrations(),
+                configuration,
+                database.getName(),
+                database.allSchemasEmpty(VerbUtils.getAllSchemas(configuration.getSchemas(),
+                    database.getCurrentSchema())));
+
+
+        } catch (final FlywayException e) {
+            callbackManager.handleEvent(Event.AFTER_INFO_ERROR, database, configuration, context.getParsingContext());
+            throw e;
+        }
+
+        callbackManager.handleEvent(Event.AFTER_INFO, database, configuration, context.getParsingContext());
+        return infoResult;
     }
 }

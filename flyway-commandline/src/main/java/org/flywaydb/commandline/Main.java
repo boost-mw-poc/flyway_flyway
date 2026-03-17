@@ -90,8 +90,6 @@ public class Main {
     private static boolean hasPrintedLicense;
 
     public static void main(final String[] args) throws Exception {
-        final long appStart = System.currentTimeMillis();
-        final long jvmStart = java.lang.management.ManagementFactory.getRuntimeMXBean().getStartTime();
         int exitCode = 0;
         JavaVersionPrinter.printJavaVersion();
 
@@ -118,11 +116,13 @@ public class Main {
                         terminate(0, flywayTelemetryHandle);
                         return;
                     }
-                    LOG.debug("JVM startup time: " + (appStart - jvmStart) + "ms");
                     configuration = new ConfigurationManagerImpl().getConfiguration(commandLineArguments);
                     flywayTelemetryManager.notifyPermitChanged(LicenseGuard.getPermit(configuration));
                     flywayTelemetryManager.notifyRootConfigChanged(configuration);
                 }
+
+                final boolean isSingleCommandExtension = commandLineArguments.getOperations().size() == 1
+                    && CommandExtensionUtils.isLightweightCommandExtension(configuration, commandLineArguments.getOperations().get(0));
 
                 final CompletableFuture<String> updateCheckFuture = commandLineArguments.skipCheckForUpdate()
                     || "json".equalsIgnoreCase(configuration.getModernConfig().getFlyway().getOutputType())
@@ -135,23 +135,26 @@ public class Main {
 
                 final OperationResult result = executeFlyway(flywayTelemetryManager,
                     commandLineArguments,
-                    configuration);
+                    configuration,
+                    isSingleCommandExtension);
 
-                final List<ResultReportGenerator> reportGenerators = PLUGIN_REGISTER.getInstancesOf(
-                    ResultReportGenerator.class);
-                for (final ResultReportGenerator resultReportGenerator : reportGenerators) {
-                    reportGenerationOutput = resultReportGenerator.generateReport(result, configuration);
-                }
+                if (!isSingleCommandExtension) {
+                    final List<ResultReportGenerator> reportGenerators = PLUGIN_REGISTER.getInstancesOf(
+                        ResultReportGenerator.class);
+                    for (final ResultReportGenerator resultReportGenerator : reportGenerators) {
+                        reportGenerationOutput = resultReportGenerator.generateReport(result, configuration);
+                    }
 
-                if (configuration.getPluginRegister()
-                    .getExact(PublishingConfigurationExtension.class)
-                    .isPublishResult()) {
-                    publishOperationResult(configuration, result);
-                    publishReport(configuration, reportGenerationOutput.reportDetails);
-                }
+                    if (configuration.getPluginRegister()
+                        .getExact(PublishingConfigurationExtension.class)
+                        .isPublishResult()) {
+                        publishOperationResult(configuration, result);
+                        publishReport(configuration, reportGenerationOutput.reportDetails);
+                    }
 
-                if (reportGenerationOutput.aggregateException != null) {
-                    throw reportGenerationOutput.aggregateException;
+                    if (reportGenerationOutput.aggregateException != null) {
+                        throw reportGenerationOutput.aggregateException;
+                    }
                 }
 
                 if (commandLineArguments.shouldOutputJson()) {
@@ -201,7 +204,15 @@ public class Main {
 
     private static OperationResult executeFlyway(final FlywayTelemetryManager flywayTelemetryManager,
         final CommandLineArguments commandLineArguments,
-        final Configuration configuration) {
+        final Configuration configuration,
+        final boolean isSingleCommandExtension) {
+        // Command extensions don't need a full Flyway instance — they use configuration directly
+        if (isSingleCommandExtension) {
+            final String operation = commandLineArguments.getOperations().get(0);
+            printLicenseInfo(configuration, operation);
+            return CommandExtensionUtils.runCommandExtension(configuration, operation, commandLineArguments.getFlags());
+        }
+
         final Flyway flyway = Flyway.configure(configuration.getClassLoader()).configuration(configuration).load();
         final Configuration executionConfiguration = flyway.getConfiguration();
         final OperationResult result;

@@ -26,6 +26,7 @@ import org.flywaydb.core.api.CoreMigrationType;
 import org.flywaydb.core.api.FlywayException;
 import org.flywaydb.core.api.MigrationInfo;
 import org.flywaydb.core.api.MigrationState;
+import org.flywaydb.core.api.callback.Event;
 import org.flywaydb.core.api.configuration.Configuration;
 import org.flywaydb.core.api.output.RepairOutput;
 import org.flywaydb.core.api.output.RepairResult;
@@ -35,6 +36,7 @@ import org.flywaydb.core.extensibility.VerbExtension;
 import org.flywaydb.core.internal.license.VersionPrinter;
 import org.flywaydb.core.internal.util.StopWatch;
 import org.flywaydb.core.internal.util.TimeFormat;
+import org.flywaydb.nc.callbacks.CallbackManager;
 import org.flywaydb.nc.utils.VerbUtils;
 import org.flywaydb.nc.preparation.PreparationContext;
 
@@ -51,35 +53,45 @@ public class RepairVerbExtension implements VerbExtension {
         final PreparationContext context = PreparationContext.get(configuration, false);
 
         final NativeConnectorsDatabase database = context.getDatabase();
+        final CallbackManager callbackManager = new CallbackManager(configuration, context.getCallbackResources());
 
         final RepairResult repairResult = new RepairResult(VersionPrinter.getVersion(),
             database.getDatabaseMetaData().databaseName());
 
-        final StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
+        callbackManager.handleEvent(Event.BEFORE_REPAIR, database, configuration, context.getParsingContext());
 
-        removeFailedMigrations(configuration, repairResult, context);
+        try {
+            final StopWatch stopWatch = new StopWatch();
+            stopWatch.start();
 
-        markRemovedMigrationsAsDeleted(configuration, repairResult, context);
+            removeFailedMigrations(configuration, repairResult, context);
 
-        alignAppliedMigrationsWithResolvedMigrations(configuration, repairResult, context);
+            markRemovedMigrationsAsDeleted(configuration, repairResult, context);
 
-        stopWatch.stop();
-        if (repairResult.repairActions.isEmpty()) {
-            LOG.info("Repair of schema history table " + database.quote(database.getCurrentSchema(),
-                configuration.getTable()) + " not needed, no migrations need repairing.");
-        } else {
-            LOG.info("Successfully repaired schema history table "
-                + database.quote(database.getCurrentSchema(),
-                configuration.getTable())
-                + " (execution time "
-                + TimeFormat.format(stopWatch.getTotalTimeMillis())
-                + ").");
-            if (repairResult.repairActions.contains("Marked missing migrations as deleted")) {
-                LOG.info(
-                    "Please ensure the previous contents of the deleted migrations are removed from the database, or moved into an existing migration.");
+            alignAppliedMigrationsWithResolvedMigrations(configuration, repairResult, context);
+
+            stopWatch.stop();
+            if (repairResult.repairActions.isEmpty()) {
+                LOG.info("Repair of schema history table " + database.quote(database.getCurrentSchema(),
+                    configuration.getTable()) + " not needed, no migrations need repairing.");
+            } else {
+                LOG.info("Successfully repaired schema history table "
+                    + database.quote(database.getCurrentSchema(),
+                    configuration.getTable())
+                    + " (execution time "
+                    + TimeFormat.format(stopWatch.getTotalTimeMillis())
+                    + ").");
+                if (repairResult.repairActions.contains("Marked missing migrations as deleted")) {
+                    LOG.info(
+                        "Please ensure the previous contents of the deleted migrations are removed from the database, or moved into an existing migration.");
+                }
             }
+        } catch (final FlywayException e) {
+            callbackManager.handleEvent(Event.AFTER_REPAIR_ERROR, database, configuration, context.getParsingContext());
+            throw e;
         }
+
+        callbackManager.handleEvent(Event.AFTER_REPAIR, database, configuration, context.getParsingContext());
         return repairResult;
     }
 

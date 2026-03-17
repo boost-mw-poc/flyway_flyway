@@ -1699,8 +1699,6 @@ public class ClassicConfiguration implements Configuration {
 
         setResolvers(configuration.getResolvers().clone());
 
-        getModernFlyway().setMigrationResolvers(null);
-
         resolvedEnvironments.clear();
         resolvedEnvironments.putAll(configuration.getCachedResolvedEnvironments());
         dataSources.clear();

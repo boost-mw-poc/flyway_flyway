@@ -42,6 +42,7 @@ import org.flywaydb.core.extensibility.EventTelemetryModel;
 import org.flywaydb.core.extensibility.LicenseGuard;
 import org.flywaydb.core.extensibility.Tier;
 import org.flywaydb.core.extensibility.VerbExtension;
+import org.flywaydb.core.internal.Topic;
 import org.flywaydb.core.internal.callback.CallbackExecutor;
 import org.flywaydb.core.internal.command.*;
 import org.flywaydb.core.internal.command.clean.DbClean;
@@ -219,8 +220,9 @@ public class Flyway {
                         }
 
                         if (nonEmptySchemas.isEmpty() && configuration.isBaselineOnMigrate()) {
-                            LOG.info("All configured schemas are empty; baseline operation skipped. "
-                                + "A baseline or migration script with a lower version than the baseline version may execute if available. Check the Schemas parameter if this is not intended.");
+                            LOG.info("All configured schemas are empty; a baseline marker will not be added to Flyway's schema history table. "
+                                + "A baseline or migration script with a lower version than the baseline version may execute if available. Check the Schemas parameter if this is not intended. See " + FlywayDbWebsiteLinks.getRedirectLinkFromTopic(
+                                Topic.BASELINE_ON_MIGRATE) + " for more info");
                         }
 
                         if (!nonEmptySchemas.isEmpty() && !configuration.isSkipExecutingMigrations()) {

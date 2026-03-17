@@ -23,6 +23,7 @@ import lombok.CustomLog;
 import org.flywaydb.core.api.CoreMigrationType;
 import org.flywaydb.core.api.FlywayException;
 import org.flywaydb.core.api.MigrationVersion;
+import org.flywaydb.core.api.callback.Event;
 import org.flywaydb.core.api.configuration.Configuration;
 import org.flywaydb.core.api.output.BaselineResult;
 import org.flywaydb.core.internal.nc.NativeConnectorsDatabase;
@@ -30,6 +31,7 @@ import org.flywaydb.core.internal.nc.schemahistory.SchemaHistoryItem;
 import org.flywaydb.core.extensibility.CachingVerbExtension;
 import org.flywaydb.core.internal.license.VersionPrinter;
 import org.flywaydb.core.internal.util.FlywayDbWebsiteLinks;
+import org.flywaydb.nc.callbacks.CallbackManager;
 import org.flywaydb.nc.preparation.PreparationContext;
 import org.flywaydb.verb.schemas.SchemasVerbExtension;
 
@@ -45,6 +47,7 @@ public class BaselineVerbExtension extends CachingVerbExtension {
     public Object executeVerb(final Configuration configuration) {
         final PreparationContext context = PreparationContext.get(configuration, cached);
         final NativeConnectorsDatabase database = context.getDatabase();
+        final CallbackManager callbackManager = new CallbackManager(configuration, context.getCallbackResources());
 
         final BaselineResult baselineResult = new BaselineResult(VersionPrinter.getVersion(),
             database.getDatabaseMetaData().databaseName());
@@ -66,9 +69,12 @@ public class BaselineVerbExtension extends CachingVerbExtension {
                      See\s""" + FlywayDbWebsiteLinks.MIGRATIONS);
         }
 
+        callbackManager.handleEvent(Event.BEFORE_BASELINE, database, configuration, context.getParsingContext());
+
         try {
             if (!schemaHistoryTableExists) {
                 createBaselineMarker(configuration, database, baselineResult);
+                callbackManager.handleEvent(Event.AFTER_BASELINE, database, configuration, context.getParsingContext());
                 return baselineResult;
             }
 
@@ -160,10 +166,15 @@ public class BaselineVerbExtension extends CachingVerbExtension {
                 }
             }
         } catch (final FlywayException e) {
+            callbackManager.handleEvent(Event.AFTER_BASELINE_ERROR,
+                database,
+                configuration,
+                context.getParsingContext());
             baselineResult.successfullyBaselined = false;
             throw e;
         }
 
+        callbackManager.handleEvent(Event.AFTER_BASELINE, database, configuration, context.getParsingContext());
         return baselineResult;
     }
 

@@ -26,6 +26,20 @@ import org.flywaydb.core.api.output.OperationResult;
 import org.flywaydb.core.extensibility.CommandExtension;
 
 public class CommandExtensionUtils {
+    public static boolean isCommandExtension(final Configuration configuration, final String command) {
+        return configuration.getPluginRegister()
+            .getInstancesOf(CommandExtension.class)
+            .stream()
+            .anyMatch(ext -> ext.handlesCommand(command));
+    }
+
+    public static boolean isLightweightCommandExtension(final Configuration configuration, final String command) {
+        return configuration.getPluginRegister()
+            .getInstancesOf(CommandExtension.class)
+            .stream()
+            .anyMatch(ext -> ext.handlesCommand(command) && !ext.requiresFlywayInstance());
+    }
+
     public static OperationResult runCommandExtension(final Configuration configuration,
         final String command,
         final List<String> flags) {

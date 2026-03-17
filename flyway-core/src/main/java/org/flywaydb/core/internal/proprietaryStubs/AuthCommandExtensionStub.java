@@ -44,6 +44,11 @@ public class AuthCommandExtensionStub implements CommandExtension<OperationResul
     }
 
     @Override
+    public boolean requiresFlywayInstance() {
+        return false;
+    }
+
+    @Override
     public boolean handlesParameter(String parameter) {
         return false;
     }

@@ -18,6 +18,9 @@ __pycache__
 venv
 .venv
 
+# Per-developer dev container overrides (BASE_IMAGE, DEVCONTAINER_IMAGE, M2_CACHE)
+.devcontainer/.env
+
 documentation/.jekyll-metadata
 documentation/_site
 documentation/_vale_config/styles/Microsoft
@@ -52,6 +55,11 @@ out/**
 
 .worktrees/
 .claude/settings.local.json
+.loop-state.md
+.workflow-state.md
 
 # Release notes CSV (temporary file, should not be committed)
 release-notes.csv
+
+# Workflow state (local tracking file, not for VCS)
+.workflow-state.md

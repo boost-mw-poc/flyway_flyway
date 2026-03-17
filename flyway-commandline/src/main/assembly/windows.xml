@@ -48,14 +48,6 @@
             <fileMode>644</fileMode>
         </fileSet>
         <fileSet>
-            <directory>../flyway-comparison/flyway-comparison-engines/src/main/resources/flyway-comparison/windows-x64</directory>
-            <outputDirectory>lib/flyway-comparison</outputDirectory>
-            <includes>
-                <include>**/*</include>
-            </includes>
-            <fileMode>644</fileMode>
-        </fileSet>
-        <fileSet>
             <directory>../flyway-rulesengine-sqlfluff/target/sqlfluff-windows/</directory>
             <outputDirectory>lib/sqlfluff</outputDirectory>
             <includes>

@@ -38,11 +38,6 @@ public interface Plugin extends Comparable<Plugin> {
         return this.getClass().getSimpleName();
     }
 
-    @JsonIgnore
-    default String getPluginVersion(final Configuration config) {
-        return null;
-    }
-
     /**
      * High numbers indicate that this type will be used in preference to lower priorities.
      */

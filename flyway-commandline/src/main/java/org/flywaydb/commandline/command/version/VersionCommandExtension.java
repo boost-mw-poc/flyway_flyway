@@ -30,7 +30,7 @@ import org.flywaydb.core.api.configuration.Configuration;
 import org.flywaydb.core.extensibility.CommandExtension;
 import org.flywaydb.core.extensibility.EventTelemetryModel;
 import org.flywaydb.core.extensibility.LicenseGuard;
-import org.flywaydb.core.extensibility.Plugin;
+import org.flywaydb.core.extensibility.VersionReportable;
 import org.flywaydb.core.internal.license.VersionPrinter;
 import org.flywaydb.core.internal.util.Pair;
 import org.flywaydb.core.internal.util.StringUtils;
@@ -58,6 +58,11 @@ public class VersionCommandExtension implements CommandExtension<VersionResult> 
     }
 
     @Override
+    public boolean requiresFlywayInstance() {
+        return false;
+    }
+
+    @Override
     public boolean handlesParameter(String parameter) {
         return false;
     }
@@ -74,9 +79,9 @@ public class VersionCommandExtension implements CommandExtension<VersionResult> 
         LOG.debug("Java " + System.getProperty("java.version") + " (" + System.getProperty("java.vendor") + ")");
         LOG.debug(System.getProperty("os.name") + " " + System.getProperty("os.version") + " " + System.getProperty("os.arch") + "\n");
 
-        List<Plugin> allPlugins = config.getPluginRegister().getInstancesOf(Plugin.class);
+        List<VersionReportable> versionedPlugins = config.getPluginRegister().getInstancesOf(VersionReportable.class);
 
-        List<PluginVersionResult> pluginVersions = allPlugins.stream()
+        List<PluginVersionResult> pluginVersions = versionedPlugins.stream()
             .map(p -> new PluginVersionResult(p.getName(), p.getPluginVersion(config), p.isLicensed(config)))
             .filter(p -> StringUtils.hasText(p.version))
             .collect(Collectors.toList());

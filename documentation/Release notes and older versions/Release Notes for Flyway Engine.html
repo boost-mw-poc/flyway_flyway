@@ -8,6 +8,36 @@
 </div>
 <div class="col-md-9">
   <div class="release">
+        <h2 id="12.1.1">Flyway 12.1.1 (2026-03-17)</h2>
+
+        <h3>Changes</h3>
+        <ul>
+            <li>Implement non statement level callbacks in Native Connectors for undo, info, baseline and repair</li>
+        </ul>
+
+        <h3>Bug fixes</h3>
+        <ul>
+            <li>`serverId` in Maven plugin now correctly respects user-configured value via `flyway.serverId`</li>
+            <li>fixed NPE in Oracle database type when using instrumentation agents like JaCoCo</li>
+            <li>fix NullPointerException in SnapshotVersionRetriever when applied migrations include null-version entries (repeatable migrations, SCHEMA markers)</li>
+            <li>snapshot no longer saved during dry run for migrate, undo, and deploy commands</li>
+            <li>Gradle plugin now correctly reads `connectRetries`, `connectRetriesInterval`, and `failOnMissingLocations` from the flyway extension configuration</li>
+            <li>Java Migrations correctly show the script path when an exception is thrown due to duplicated versions</li>
+        </ul>
+
+        <h3>Performance improvements</h3>
+        <ul>
+            <li>improved startup time for lightweight CLI commands like `flyway version` and `flyway auth`</li>
+        </ul>
+
+        <h3>Library upgrades</h3>
+        <ul>
+            <li>Upgrade lombok to 1.18.44</li>
+        </ul>
+
+  </div>
+
+  <div class="release">
         <h2 id="12.1.0">Flyway 12.1.0 (2026-03-09)</h2>
 
         <h3>New features</h3>

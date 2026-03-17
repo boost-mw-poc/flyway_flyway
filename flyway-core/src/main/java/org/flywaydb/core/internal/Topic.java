@@ -22,6 +22,9 @@ package org.flywaydb.core.internal;
 import java.util.Optional;
 
 public enum Topic {
+    // Help Links
+    BASELINE_ON_MIGRATE("baseline-on-migrate"),
+
     // Redgate SQLFluff rules
     RG01("rules/RG01"),
     RG02("rules/RG02"),

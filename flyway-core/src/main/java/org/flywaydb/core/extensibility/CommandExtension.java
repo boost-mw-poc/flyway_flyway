@@ -44,6 +44,13 @@ public interface CommandExtension<T extends OperationResult> extends PluginMetad
     }
 
     /**
+     * @return Whether this extension requires a Flyway instance to run
+     */
+    default boolean requiresFlywayInstance() {
+        return true;
+    }
+
+    /**
      * @param parameter The parameter to check is handled
      * @return Whether this extension handles the specified parameter
      */
@@ -55,4 +62,5 @@ public interface CommandExtension<T extends OperationResult> extends PluginMetad
      * @return The result of this command being handled
      */
     T handle(Configuration config, List<String> flags) throws FlywayException;
+
 }
