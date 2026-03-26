@@ -11,7 +11,7 @@ The `check` command encapsulates the following operations:
 | [`check -drift`](<Commands/Check/Check Drift>)     | Enterprise         | Check for unexpected modifications to a database.                                                            |
 | [`check -changes`](<Commands/Check/Check Changes>) | Enterprise         | Generate a report of pending changes to a database.                                                          |
 | [`check -dryrun`](<Commands/Check/Check DryRun>)   | Teams & Enterprise | Perform a dry run, generating a deployment script representing what will be run when deployment is executed. |
-| [`check -code`](<Commands/Check/Check Code>)       | All                | Run code analysis on your migrations.                                                                        |
+| [`check -code`](<Commands/Check/Check Code>)       | All                | Run code review on your migrations.                                                                          |
 
 `check` produces a [report file](<Configuration/Flyway Namespace/Flyway Report Filename Setting>) that contains the results of the operation.
 

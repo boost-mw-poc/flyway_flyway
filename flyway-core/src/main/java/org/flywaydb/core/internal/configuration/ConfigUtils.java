@@ -856,21 +856,15 @@ public class ConfigUtils {
     }
 
     public static CleanModel getCleanModel(final Configuration conf) {
-        final ConfigurationExtension extensionNew = conf.getPluginRegister()
+        final ConfigurationExtension extension = conf.getPluginRegister()
             .getLicensedExact("SQLServerConfigurationExtension", conf);
-        final ConfigurationExtension extensionDepreciated = conf.getPluginRegister()
-            .getLicensedExact("CleanModeConfigurationExtension", conf);
-        CleanModel cleanModelNew = null;
-        CleanModel cleanModelDepreciated = null;
+        CleanModel cleanModel = null;
 
-        if (extensionNew != null) {
-            cleanModelNew = (CleanModel) ClassUtils.getFieldValue(extensionNew, "clean");
-        }
-        if (extensionDepreciated != null) {
-            cleanModelDepreciated = (CleanModel) ClassUtils.getFieldValue(extensionDepreciated, "clean");
+        if (extension != null) {
+            cleanModel = (CleanModel) ClassUtils.getFieldValue(extension, "clean");
         }
 
-        final CleanModel result = cleanModelNew != null ? cleanModelNew : cleanModelDepreciated;
+        final CleanModel result = cleanModel;
         if (result != null) {
             result.validate();
             return result;
@@ -880,15 +874,11 @@ public class ConfigUtils {
     }
 
     public static void setCleanModel(final Configuration conf, final CleanModel model) {
-        final ConfigurationExtension extensionNew = conf.getPluginRegister()
+        final ConfigurationExtension extension = conf.getPluginRegister()
             .getLicensedExact("SQLServerConfigurationExtension", conf);
-        final ConfigurationExtension extensionDepreciated = conf.getPluginRegister()
-            .getLicensedExact("CleanModeConfigurationExtension", conf);
 
-        if (extensionNew != null) {
-            ClassUtils.setFieldValue(extensionNew, "clean", model);
-        } else if (extensionDepreciated != null) {
-            ClassUtils.setFieldValue(extensionDepreciated, "clean", model);
+        if (extension != null) {
+            ClassUtils.setFieldValue(extension, "clean", model);
         }
     }
 

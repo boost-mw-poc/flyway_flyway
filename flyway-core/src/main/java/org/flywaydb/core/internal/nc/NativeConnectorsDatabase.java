@@ -26,9 +26,9 @@ import java.util.regex.Pattern;
 import org.flywaydb.core.api.configuration.Configuration;
 import org.flywaydb.core.api.logging.Log;
 import org.flywaydb.core.api.output.CleanResult;
+import org.flywaydb.core.internal.database.GeneralDatabaseType;
 import org.flywaydb.core.internal.nc.schemahistory.SchemaHistoryItem;
 import org.flywaydb.core.internal.nc.schemahistory.SchemaHistoryModel;
-import org.flywaydb.core.extensibility.Plugin;
 import org.flywaydb.core.internal.configuration.models.ResolvedEnvironment;
 import org.flywaydb.core.internal.parser.Parser;
 import org.flywaydb.core.internal.parser.ParsingContext;
@@ -38,11 +38,16 @@ import org.flywaydb.core.internal.util.TimeFormat;
 /**
  * Interface to define new experimental database plugins.
  */
-public sealed interface NativeConnectorsDatabase<T> extends Plugin, AutoCloseable permits
+public sealed interface NativeConnectorsDatabase<T> extends GeneralDatabaseType, AutoCloseable permits
                                                                                   AbstractNativeConnectorsDatabase,
                                                                                   AbstractNativeConnectorsHybridDatabase {
     Log LOG = org.flywaydb.core.api.logging.LogFactory.getLog(NativeConnectorsDatabase.class);
     String APPLICATION_NAME = "Flyway by Redgate";
+
+    @Override
+    default String getName() {
+        return getDatabaseType();
+    }
 
     /**
      * Check for if this database type supports the provided URL/Connection String.
@@ -259,6 +264,10 @@ public sealed interface NativeConnectorsDatabase<T> extends Plugin, AutoCloseabl
     default Pattern[] getUrlRedactionPatterns() {
         return new Pattern[] {Pattern.compile("password=([^;&]*).*", Pattern.CASE_INSENSITIVE),
                               Pattern.compile("(?:jdbc:)?[^:]+://[^:]+:([^@]+)@.*", Pattern.CASE_INSENSITIVE)};
+    }
+
+    default List<String> getSupportedEngines() {
+        return List.of(getDatabaseType().replaceAll("\\s", ""));
     }
     
     boolean isClosed();

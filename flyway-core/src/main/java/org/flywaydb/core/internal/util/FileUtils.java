@@ -155,6 +155,14 @@ public class FileUtils {
         return readAsString(path, StandardCharsets.UTF_8);
     }
 
+    public static String readAsExactString(final Path path) {
+        try {
+            return Files.readString(path.toAbsolutePath(), StandardCharsets.UTF_8);
+        } catch (final IOException e) {
+            throw new FlywayException("Unable to read " + path.toAbsolutePath() + " from disk", e);
+        }
+    }
+
     public static String readResourceAsString(String path) {
         return readResourceAsString(FileUtils.class.getClassLoader(), path);
     }

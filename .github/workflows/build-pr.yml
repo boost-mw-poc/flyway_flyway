@@ -1,3 +1,4 @@
+# TODO Verify workflow push permissions
 name: Build PRs
 
 on:

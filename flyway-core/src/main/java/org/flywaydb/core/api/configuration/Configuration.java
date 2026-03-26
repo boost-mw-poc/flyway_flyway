@@ -30,7 +30,6 @@ import org.flywaydb.core.internal.configuration.models.ConfigurationModel;
 import org.flywaydb.core.internal.configuration.models.DataSourceModel;
 import org.flywaydb.core.internal.configuration.models.ResolvedEnvironment;
 import org.flywaydb.core.internal.configuration.resolvers.ProvisionerMode;
-import org.flywaydb.core.internal.database.DatabaseType;
 import org.flywaydb.core.internal.plugin.PluginRegister;
 
 import javax.sql.DataSource;
@@ -640,12 +639,6 @@ public interface Configuration {
      * The JDBC driver of the configuration
      */
     String getDriver();
-
-    /**
-     * Get the Database type determined by the URL or Datasource
-     * If there are multiple matching DatabaseTypes for the URL, the first candidate will be returned.
-     */
-    DatabaseType getDatabaseType();
 
     /**
      *  Gets the connection environments that have already been resolved from this configuration

@@ -41,14 +41,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
-public interface DatabaseType extends Plugin {
-    /**
-     * @return The human-readable name for this database type.
-     */
-    String getName();
-
-    List<String> getSupportedEngines();
-
+public interface DatabaseType extends GeneralDatabaseType {
     /**
      * @return The JDBC type used to represent {@code null} in prepared statements.
      */

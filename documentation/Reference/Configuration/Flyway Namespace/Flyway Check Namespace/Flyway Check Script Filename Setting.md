@@ -6,7 +6,7 @@ subtitle: flyway.check.scriptFilename
 
 ## Description
 
-Specify an individual script to run code analysis on. Only used if [scope](<Configuration/Flyway Namespace/Flyway Check Namespace/Flyway Check Scope Setting>) is 'SCRIPT'.
+Specify an individual script to run code review on. Only used if [scope](<Configuration/Flyway Namespace/Flyway Check Namespace/Flyway Check Scope Setting>) is 'SCRIPT'.
 This will be resolved relative to the [working directory](<Command-line Parameters/Working Directory Parameter>).
 
 ## Type

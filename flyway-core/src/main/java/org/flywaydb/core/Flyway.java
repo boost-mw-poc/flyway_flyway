@@ -61,13 +61,6 @@ import java.util.Collections;
 import java.util.List;
 
 
-
-
-
-
-
-
-
 /**
  * This is the centre point of Flyway, and for most users, the only class they will ever have to deal with.
  * <p>
@@ -186,13 +179,6 @@ public class Flyway {
 
             try {
                 return flywayExecutor.execute((migrationResolver, schemaHistory, database, defaultSchema, schemas, callbackExecutor, statementInterceptor) -> {
-
-
-
-
-
-
-
                     if (configuration.isValidateOnMigrate()) {
                         final Collection<ValidatePattern> ignorePatterns = new ArrayList<>(Arrays.asList(configuration.getIgnoreMigrationPatterns()));
                         ignorePatterns.add(ValidatePattern.fromPattern("*:pending"));
@@ -228,9 +214,6 @@ public class Flyway {
                         if (!nonEmptySchemas.isEmpty() && !configuration.isSkipExecutingMigrations()) {
                             if (configuration.isBaselineOnMigrate()) {
                                 doBaseline(schemaHistory, callbackExecutor, database);
-
-
-
                             } else {
                                 // Second check for MySQL which is sometimes flaky otherwise
                                 if (!schemaHistory.exists()) {
@@ -311,10 +294,6 @@ public class Flyway {
             try {
                 return flywayExecutor.execute((migrationResolver, schemaHistory, database, defaultSchema, schemas, callbackExecutor, statementInterceptor) -> {
                     final CleanResult cleanResult = doClean(database, schemaHistory, defaultSchema, schemas, callbackExecutor);
-
-
-
-
 
                     callbackExecutor.onOperationFinishEvent(Event.AFTER_CLEAN_OPERATION_FINISH, cleanResult);
 
@@ -419,10 +398,6 @@ public class Flyway {
 
                     final BaselineResult baselineResult = doBaseline(schemaHistory, callbackExecutor, database);
 
-
-
-
-
                     callbackExecutor.onOperationFinishEvent(Event.AFTER_BASELINE_OPERATION_FINISH, baselineResult);
 
                     return baselineResult;
@@ -462,10 +437,6 @@ public class Flyway {
             try {
                 return flywayExecutor.execute((migrationResolver, schemaHistory, database, defaultSchema, schemas, callbackExecutor, statementInterceptor) -> {
                     final RepairResult repairResult = new DbRepair(database, migrationResolver, schemaHistory, callbackExecutor, configuration).repair();
-
-
-
-
 
                     callbackExecutor.onOperationFinishEvent(Event.AFTER_REPAIR_OPERATION_FINISH, repairResult);
 

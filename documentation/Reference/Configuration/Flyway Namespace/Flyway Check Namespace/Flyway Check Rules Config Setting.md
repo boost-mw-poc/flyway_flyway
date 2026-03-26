@@ -6,11 +6,11 @@ subtitle: flyway.check.rulesConfig
 
 ## Description
 
-You can configure the file path for the SQLFluff configuration file to customize SQLFluff behavior during code analysis. This setting allows you to specify the exact file path containing the SQLFluff configuration file.
+You can configure the file path for the SQLFluff configuration file to customize SQLFluff behavior during code review. This setting allows you to specify the exact file path containing the SQLFluff configuration file.
 
 This parameter interacts with the [`workingDirectory`](<Command-line Parameters/Working Directory Parameter>) setting.
 
-See [Code Analysis](https://documentation.red-gate.com/flyway/flyway-concepts/code-analysis) for more information.
+See [Code Review](https://documentation.red-gate.com/flyway/flyway-concepts/code-analysis) for more information.
 
 ## Type
 

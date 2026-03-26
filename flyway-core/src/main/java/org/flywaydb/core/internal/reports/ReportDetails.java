@@ -25,4 +25,5 @@ import lombok.Data;
 public class ReportDetails {
     private String jsonReportFilename;
     private String htmlReportFilename;
+    private String sarifReportFilename;
 }

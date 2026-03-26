@@ -84,9 +84,9 @@ Now run the following command:
 
 You should see output similar to the following:
 ```
-Flyway OSS Edition 11.1.0 by Redgate
+Flyway OSS Edition {{ site.flywayVersion }} by Redgate
 
-See release notes here: https://rd.gt/416ObMi
+See release notes here: {% include release-notes-url.html %}
 Database: <<details removed>> (MongoDB)
 Schema history table "test"."flyway_schema_history" does not exist yet
 Successfully validated 1 migration (execution time 00:00.934s)

@@ -16,7 +16,7 @@ For purposes of setting policy, all you need to do is change the `severity` file
 
 ## Regular expression rules format
 
-When using regular expression rules for static code analysis through [check -code](<Commands/Check/Check Code>), the format of the [TOML](https://toml.io/en/) rules files is as follows:
+When using regular expression rules for code review through [check -code](<Commands/Check/Check Code>), the format of the [TOML](https://toml.io/en/) rules files is as follows:
 
 | Field       | Purpose                                        | Type               | Possible Values                                                                                               | Example                                               |
 |-------------|------------------------------------------------|--------------------|---------------------------------------------------------------------------------------------------------------|-------------------------------------------------------|
@@ -51,17 +51,6 @@ The `severity` field controls how violations of this rule are handled:
 * `disabled` - The rule will be ignored and no violations will be reported
 
 The `disabled` severity level allows you to temporarily disable specific rules without removing them from your configuration.
-
-### passOnRegexMatch **Deprecated**
-
-The parameter is deprecated in Regex Code Analysis and will be ignored in future releases. Regex matches will always be treated as violations.
- 
-If your previous configuration relied on `passOnRegexMatch = true` (i.e. expecting the pattern to be present), you will need to invert your Regex to match cases where the pattern is absent instead.
-
-| Value | Purpose                                                                                                                                                 |
-| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| false | There is something in my migration that the regex matches - I want this rule to flag a violation in this case                                           |
-| true  | I want a particular style or pattern in my code (for example, something standard in every migration script). If it is *not* there then flag a violation |
 
 ### Regular expression considerations
 

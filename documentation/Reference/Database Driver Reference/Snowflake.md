@@ -2,7 +2,7 @@
 subtitle: Snowflake
 ---
 
-- **Verified Versions:** 3.50, 9.19
+- **Verified Versions:** 10.8
 - **Maintainer:** {% include redgate-badge.html %}
 
 ## Supported Versions and Support Levels
@@ -16,8 +16,8 @@ subtitle: Snowflake
 | **URL format**                     | <code>jdbc:snowflake://<i>account</i>.snowflakecomputing.com/?db=<i>database</i>&warehouse=<i>warehouse</i>&role=<i>role</i><i>&JDBC_QUERY_RESULT_FORMAT=JSON</i></code><br>(optionally <code>&schema=<i>schema</i></code> to specify current schema) |
 | **Ships with Flyway Command-line** | Yes                                                                                                                                     |
 | **Maven Central coordinates**      | `net.snowflake:snowflake-jdbc`                                                                                                          |
-| **Supported versions**             | `3.6.23` and later                                                                                                                      |
-| **Default Java class**             | `net.snowflake.client.jdbc.SnowflakeDriver`                                                                                             |
+| **Supported versions**             | `4.0.2` and later                                                                                                                       |
+| **Default Java class**             | `net.snowflake.client.api.driver.SnowflakeDriver`                                                                                       |
 
 
 ## Java Usage
@@ -95,7 +95,7 @@ Snowflake JDBC supports key-based authentication. To use this, you will need to:
 - assign the public key to the relevant Snowflake user account using <code>ALTER USER</code> - for complete
 instructions on these steps, refer to [Snowflake's documentation](https://docs.snowflake.com/developer-guide/jdbc/jdbc-configure#using-key-pair-authentication-and-key-rotation)
 - If you are using an encrypted key pair then you may need to set a JVM flag for the [Snowflake JDBC driver to be able to decrypt it](https://docs.snowflake.com/en/developer-guide/jdbc/jdbc-configure#key-decryption-errors):
-  - For example  in linux you would do it this way `export JAVA_OPTS='-Dnet.snowflake.jdbc.enableBouncyCastle=true'`
+  - For example  in linux you would do it this way `export JAVA_OPTS='-Dnet.snowflake.jdbc.useBundledBouncyCastleForPrivateKeyDecryption=true'`
 
 
 Finally, amend your JDBC connection string with the extra parameters to enable key-based auth and to refer to the

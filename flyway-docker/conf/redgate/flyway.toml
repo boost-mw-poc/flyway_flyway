@@ -13,7 +13,7 @@ url = "jdbc:sqlite:test"
 url = "jdbc:sqlite:temp"
 
 [environments.mongo]
-url = "${env.MONGO_CONNECTION_DETAILS}"
+url = "mongodb://sa:flywayPWD000@localhost:27018"
 
 [environments.mongo.flyway]
 sqlMigrationSuffixes = [".js"]

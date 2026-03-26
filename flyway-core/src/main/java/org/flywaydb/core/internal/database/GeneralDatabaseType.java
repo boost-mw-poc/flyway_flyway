@@ -17,29 +17,13 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.flywaydb.core.internal.command.clean;
+package org.flywaydb.core.internal.database;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.flywaydb.core.extensibility.ConfigurationExtension;
+import java.util.List;
+import org.flywaydb.core.extensibility.Plugin;
 
-@Getter
-@Setter
-public class CleanModeConfigurationExtension implements ConfigurationExtension {
-    public enum Mode {
-        DEFAULT, SCHEMA, ALL;
-    }
+public interface GeneralDatabaseType extends Plugin {
+    String getName();
 
-    @Deprecated
-    CleanModel clean;
-
-    @Override
-    public String getNamespace() {
-        return "plugins";
-    }
-
-    @Override
-    public String getConfigurationParameterFromEnvironmentVariable(String environmentVariable) {
-        return null;
-    }
+    List<String> getSupportedEngines();
 }

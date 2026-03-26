@@ -24,7 +24,37 @@ import java.util.Optional;
 public enum Topic {
     // Help Links
     BASELINE_ON_MIGRATE("baseline-on-migrate"),
-
+    REBASELINING("rebaselining"),
+    // Documentation topics (used by FlywayDbWebsiteLinks constants)
+    FILTER_INFO_OUTPUT("reference/usage/command-line"),
+    USAGE_COMMAND_LINE("reference/usage/command-line"),
+    STAYING_UP_TO_DATE("release-notes-and-older-versions/release-notes-for-flyway-engine"),
+    CUSTOM_VALIDATE_RULES("flyway-blog/older-posts/customize-validation-rules-with-ignoremigrationpatterns"),
+    IGNORE_MIGRATION_PATTERNS("reference/configuration/flyway-namespace/flyway-ignore-migration-patterns-setting"),
+    RESET_THE_BASELINE_MIGRATION("flyway-concepts/migrations/baseline-migrations"),
+    ORACLE_SQL_PLUS("reference/configuration/flyway-namespace/flyway-oracle-namespace/flyway-oracle-sqlplus-setting"),
+    LOCK_RETRY_COUNT("reference/configuration/flyway-namespace/flyway-lock-retry-count-setting"),
+    WINDOWS_AUTH("reference/database-driver-reference/sql-server-database"),
+    AZURE_ACTIVE_DIRECTORY("reference/database-driver-reference/sql-server-database"),
+    KNOWN_PARSER_LIMITATIONS("learn-more-about-flyway/troubleshooting/known-parser-limitations"),
+    TEAMS_FEATURES_FOR_BIG_QUERY("reference/database-driver-reference/google-bigquery"),
+    TEAMS_FEATURES_FOR_CLOUD_SPANNER("reference/database-driver-reference/google-cloud-spanner"),
+    FILE_ENCODING_HELP("reference/configuration/flyway-namespace/flyway-encoding-setting"),
+    TEAMS_ENTERPRISE_DOWNLOAD("reference/usage/command-line"),
+    CHANGES_REPORT("deploying-database-changes-using-flyway/generating-a-deployment-changes-report"),
+    CODE_ANALYSIS("reference/commands/check"),
+    DRIFT_REPORT("reference/commands/check"),
+    DRY_RUN_REPORT("reference/commands/check"),
+    INFO_REPORT("reference/commands/info"),
+    MIGRATION_REPORT("reference/commands/migrate"),
+    MIGRATIONS("flyway-concepts/migrations"),
+    DATABASE_TROUBLESHOOTING("reference/usage/database-troubleshooting"),
+    SNOWFLAKE("reference/database-driver-reference/snowflake"),
+    RELEASE_NOTES("release-notes-and-older-versions/release-notes-for-flyway-engine"),
+    ORACLE_DATABASE("reference/database-driver-reference/oracle-database"),
+    LICENSING_ACTIVATING_CLI("getting-started-with-flyway/system-requirements/licensing"),
+    OFFLINE_LICENSE_PERMITS("getting-started-with-flyway/system-requirements/licensing/license-permits"),
+    NATIVE_CONNECTORS_MONGODB("reference/database-driver-reference/mongodb-native-connectors"),
     // Redgate SQLFluff rules
     RG01("rules/RG01"),
     RG02("rules/RG02"),
@@ -43,6 +73,10 @@ public enum Topic {
     RG15("rules/RG15"),
     RG16("rules/RG16"),
     RG17("rules/RG17"),
+    RG18("rules/RG18"),
+    RG19("rules/RG19"),
+    RG20("rules/RG20"),
+    RG21("rules/RG21"),
     // Redgate Regex rules
     RX001("rules/RX001"),
     RX002("rules/RX002"),
@@ -138,7 +172,10 @@ public enum Topic {
     // SQLFluff TSQL rules
     TQ01("rules/TQ01"),
     TQ02("rules/TQ02"),
-    TQ03("rules/TQ03");
+    TQ03("rules/TQ03"),
+
+    // Concepts
+    CHECK_CODE("check-code");
 
     private final String path;
     private final Optional<String> anchor;

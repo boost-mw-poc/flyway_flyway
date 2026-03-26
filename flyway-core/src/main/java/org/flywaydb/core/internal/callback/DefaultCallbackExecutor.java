@@ -131,7 +131,8 @@ public class DefaultCallbackExecutor<E extends CallbackEvent<E>> implements Call
         final Context context = new SimpleContext(configuration,
             database.getMigrationConnection(),
             migrationInfo,
-            operationResult);
+            operationResult,
+            database);
         for (final GenericCallback<E> callback : callbacks) {
             if (callback.supports(event, context)) {
                 handleEvent(callback, event, context);
@@ -140,7 +141,7 @@ public class DefaultCallbackExecutor<E extends CallbackEvent<E>> implements Call
     }
 
     private Collection<String> execute(final E event, final Connection connection) {
-        final Context context = new SimpleContext(configuration, connection, null, null);
+        final Context context = new SimpleContext(configuration, connection, null, null, database);
 
         final Collection<GenericCallback<E>> callbacksToExecute = callbacks.stream()
             .filter(x -> x.supports(event, context))

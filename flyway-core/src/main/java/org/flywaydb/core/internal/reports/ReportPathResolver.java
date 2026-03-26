@@ -28,6 +28,7 @@ public class ReportPathResolver {
     private static final String JSON_REPORT_EXTENSION = ".json";
     private static final String HTML_REPORT_EXTENSION = ".html";
     private static final String HTM_REPORT_EXTENSION = ".htm";
+    private static final String SARIF_REPORT_EXTENSION = ".sarif";
     private static final Pattern REPORT_FILE_PATTERN = Pattern.compile("\\.html?$");
 
     public static ResolvedReportPaths resolve(final Configuration configuration) {
@@ -38,9 +39,11 @@ public class ReportPathResolver {
         final String htmlFilename = baseFilename + (reportFilename.endsWith(HTM_REPORT_EXTENSION)
             ? HTM_REPORT_EXTENSION
             : HTML_REPORT_EXTENSION);
+        final String sarifFilename = baseFilename + "-code-review" + SARIF_REPORT_EXTENSION;
 
         return new ResolvedReportPaths(Path.of(ConfigUtils.getFilenameWithWorkingDirectory(jsonFilename,
-            configuration)), Path.of(ConfigUtils.getFilenameWithWorkingDirectory(htmlFilename, configuration)));
+            configuration)), Path.of(ConfigUtils.getFilenameWithWorkingDirectory(htmlFilename, configuration)),
+            Path.of(ConfigUtils.getFilenameWithWorkingDirectory(sarifFilename, configuration)));
     }
 
     private static String getBaseFilename(final String filename) {

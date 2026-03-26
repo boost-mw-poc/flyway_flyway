@@ -35,6 +35,7 @@ import org.flywaydb.core.internal.license.FlywayPermit;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+import org.flywaydb.core.internal.util.FlywayDbWebsiteLinks;
 
 @CustomLog
 @ExtensionMethod(Tier.class)

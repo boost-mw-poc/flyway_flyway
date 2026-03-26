@@ -8,6 +8,47 @@
 </div>
 <div class="col-md-9">
   <div class="release">
+        <h2 id="12.2.0">Flyway 12.2.0 (2026-03-26)</h2>
+
+        <h3>New features</h3>
+        <ul>
+            <li>Added a new rule: RG19 - Simple check to ensure table names are not pluralized. More complex pluralizations should be handled by hand.</li>
+            <li>Added a new rule: RG20 - Object names should be contained within square brackets.</li>
+            <li>`check -code` now generates a SARIF 2.1.0 report file (`.sarif`) alongside JSON and HTML reports, enabling integration with GitHub Code Scanning, Azure DevOps, and other SARIF-compatible tools</li>
+            <li>Add RG21, a configurable rule that can enforce naming prefixes for multiple object types. (Table, View, Procedure, Function, Schema)</li>
+            <li>added `check.code.noqaSeverity` setting for configuring the severity of the warning about use of `--noqa` in migrations checked by SQLFluff as part of `check -code`</li>
+        </ul>
+
+        <h3>Changes</h3>
+        <ul>
+            <li>Code Analysis renamed to Code Review in output from check command</li>
+            <li>the regex rule engine used by check -code will no longer automatically convert line endings before applying rules for the contents of migrations</li>
+        </ul>
+
+        <h3>Bug fixes</h3>
+        <ul>
+            <li>Flyway now correctly exits with a non-zero exit code when migrations fail and multiple report generators are loaded</li>
+            <li>Fix parsing of backticks for quoted strings in MySQL</li>
+        </ul>
+
+        <h3>Library upgrades</h3>
+        <ul>
+            <li>Updated Snowflake JDBC driver to 4.0.2</li>
+            <li>Upgrade aws-secretsmanager to 2.0.4</li>
+        </ul>
+
+        <h3>Internal dependency</h3>
+        <ul>
+            <li>Updated RgCompare.Cli from 1.52.0.3327 to 1.52.0.3345</li>
+            <li>Updated RgCompare.Cli from 1.52.0.3345 to 1.52.0.3385</li>
+            <li>Upgraded RgCompare.Cli from 1.52.1.3407 to 1.52.1.3410</li>
+            <li>Upgraded RgCompare.Cli from 1.52.1.3410 to 1.52.1.3424</li>
+            <li>Upgraded RgCompare.Cli from 1.52.1.3424 to 1.52.1.3430</li>
+        </ul>
+
+  </div>
+
+  <div class="release">
         <h2 id="12.1.1">Flyway 12.1.1 (2026-03-17)</h2>
 
         <h3>Changes</h3>

@@ -76,6 +76,7 @@ import org.flywaydb.core.internal.publishing.OperationResultPublisher;
 import org.flywaydb.core.internal.publishing.PublishingConfigurationExtension;
 import org.flywaydb.core.internal.reports.ReportDetails;
 import org.flywaydb.core.internal.reports.ReportGenerationOutput;
+import org.flywaydb.core.internal.reports.ReportGenerationOutputMerger;
 import org.flywaydb.core.internal.reports.ResultReportGenerator;
 import org.flywaydb.core.internal.util.CommandExtensionUtils;
 import org.flywaydb.core.internal.util.FlywayDbWebsiteLinks;
@@ -142,7 +143,8 @@ public class Main {
                     final List<ResultReportGenerator> reportGenerators = PLUGIN_REGISTER.getInstancesOf(
                         ResultReportGenerator.class);
                     for (final ResultReportGenerator resultReportGenerator : reportGenerators) {
-                        reportGenerationOutput = resultReportGenerator.generateReport(result, configuration);
+                        final ReportGenerationOutput output = resultReportGenerator.generateReport(result, configuration);
+                        reportGenerationOutput = ReportGenerationOutputMerger.merge(reportGenerationOutput, output);
                     }
 
                     if (configuration.getPluginRegister()
@@ -447,6 +449,9 @@ public class Main {
             }
             if (reportDetails.getHtmlReportFilename() != null) {
                 objectNode.put("htmlReport", reportDetails.getHtmlReportFilename());
+            }
+            if (reportDetails.getSarifReportFilename() != null) {
+                objectNode.put("sarifReport", reportDetails.getSarifReportFilename());
             }
         }
 

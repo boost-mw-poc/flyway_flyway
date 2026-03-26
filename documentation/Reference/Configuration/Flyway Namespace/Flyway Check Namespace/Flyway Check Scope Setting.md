@@ -6,7 +6,7 @@ subtitle: flyway.check.scope
 
 ## Description
 
-If this parameter is specified, Flyway will use it to determine the scope of files to include in code analysis.
+If this parameter is specified, Flyway will use it to determine the scope of files to include in code review.
 
 __Note:__ Only the following values are valid for this parameter (case-insensitive):
 - DEFAULT

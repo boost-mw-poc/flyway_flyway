@@ -35,8 +35,6 @@ def main(argv: List[str]):
     # Env validation (skip hard failure on dry-run to allow planning)
     missing_errors: List[str] = []
 
-    if 'MONGO_CONNECTION_DETAILS' not in os.environ:
-        missing_errors.append('MONGO_CONNECTION_DETAILS (required for mongo tests)')
     if missing_errors and not args.dry_run:
         raise SystemExit('Missing required env vars: ' + ', '.join(missing_errors))
 

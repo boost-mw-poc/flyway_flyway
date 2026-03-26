@@ -198,3 +198,59 @@ This will cause data loss unless handled carefully. This rule will identify inst
 It is a good practice to include a description in the `MS_Description` extended property to document the purpose of a table.
 ### Groups: `all`, `redgate`
 ### Dialects supported: `TSQL`
+
+---
+{% include anchor.html link="RG18"%}
+# Rule: RG18 TABLE names should be pluralised
+## Check that CREATE TABLE statements are created as plurals
+This will apply a simple suffix heuristic that covers the most common English pluralization patterns to new tables.
+Note that RG18 and RG19 are mutually exclusive, enable only one to suit your naming convention.
+
+### Groups: `all`
+### Dialects supported: `all`
+
+---
+{% include anchor.html link="RG19"%}
+# Rule: RG19 TABLE names should be singular
+## Check that CREATE TABLE statements are created as singulars
+This will apply a simple suffix heuristic to check that table names do not end in 's'. Note that RG18 and RG19 are mutually exclusive, enable only one to suit your naming convention.
+
+### Groups: `all`
+### Dialects supported: `all`
+
+---
+{% include anchor.html link="RG20"%}
+# Rule: RG20 Unbracketed object names
+## Check for object names not wrapped in square brackets
+It is good practice to wrap object names in square brackets to ensure compatibility with reserved keywords, special characters, and future changes.
+### Groups: `all`, `redgate`
+### Dialects supported: `TSQL`
+
+---
+{% include anchor.html link="RG21"%}
+# Rule: RG21 Object prefix naming convention
+## Check that object names match a required prefix for their type
+Enforces a configurable prefix naming convention for database objects created via `CREATE` statements. Each object type has an independent regex pattern.
+
+### Groups: `all`, `redgate`
+### Dialects supported: `all` (procedure and function support varies by dialect)
+### Configuration
+Configure per-type prefix patterns under `[sqlfluff:rules:redgate.prefix_naming]`. An absent or empty value disables the check for that type. Matching is always case-insensitive (e.g. `^tbl_` matches `TBL_Customers`).
+
+| Key | Object type | Example pattern |
+|---|---|---|
+| `required_table_prefix` | `CREATE TABLE` | `^tbl_` |
+| `required_view_prefix` | `CREATE VIEW` | `^vw_` |
+| `required_procedure_prefix` | `CREATE PROCEDURE` | `^sp_` |
+| `required_function_prefix` | `CREATE FUNCTION` | `^fn_` |
+| `required_schema_prefix` | `CREATE SCHEMA` | `^sch_` |
+
+### Pattern
+```ini
+[sqlfluff:rules:redgate.prefix_naming]
+required_table_prefix = ^tbl_
+required_view_prefix = ^vw_
+required_procedure_prefix = ^sp_
+required_function_prefix = ^fn_
+```
+

@@ -230,9 +230,6 @@ public class ModernConfigurationManager implements ConfigurationManager {
         final List<String> configuredPluginParameters = new ArrayList<>();
         for (final ConfigurationExtension configurationExtension : cfg.getPluginRegister()
             .getInstancesOf(ConfigurationExtension.class)) {
-            if (configurationExtension.getNamespace().isEmpty()) {
-                processParametersByNamespace("plugins", config, configurationExtension, configuredPluginParameters);
-            }
             processParametersByNamespace(configurationExtension.getNamespace(),
                 config,
                 configurationExtension,
@@ -371,12 +368,6 @@ public class ModernConfigurationManager implements ConfigurationManager {
 
                 if (!values.isEmpty()) {
                     for (final Map.Entry<String, Object> entry : values.entrySet()) {
-                        if ("plugins".equals(namespace)) {
-                            LOG.warn("Deprecated namespace configured: 'plugins."
-                                + entry.getKey()
-                                + "'. Please see "
-                                + FlywayDbWebsiteLinks.V10_BLOG);
-                        }
                         if (entry.getValue() instanceof Map<?, ?> && namespace.isEmpty()) {
                             final Map<String, Object> temp = (Map<String, Object>) entry.getValue();
                             configuredPluginParameters.addAll(temp.keySet());
@@ -502,6 +493,18 @@ public class ModernConfigurationManager implements ConfigurationManager {
 
         final StringBuilder exceptionMessage = new StringBuilder();
         CoreErrorCode errorCode = CoreErrorCode.CONFIGURATION_RECOVERABLE;
+
+        missingParams.entrySet().removeIf(entry -> {
+            if ("plugins".equals(entry.getKey())) {
+                LOG.warn("The 'plugins' namespace for configuration parameters is no longer supported");
+                return true;
+            }
+            return false;
+        });
+
+        if (missingParams.isEmpty()) {
+            return;
+        }
 
         for (Map.Entry<String, ? extends List<String>> entry : missingParams.entrySet()) {
             String namespace = entry.getKey();

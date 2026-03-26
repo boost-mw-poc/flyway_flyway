@@ -38,7 +38,7 @@ Whether Flyway will fail or not if there is an error is governed by the [`check.
 ### Parameters
 Many rules have configurable options that allow you to customize their behavior. For the [standard SQLFluff rules](https://docs.sqlfluff.com/en/stable/reference/rules.html) you will see these defined in each rule in a section labelled "Configuration"
 
-For the [Redgate SQLFluff rules Library](<Code Analysis Rules/Redgate SQLFluff Rules Library>) you will also find a "Configuration" section for rules where this is applicable.
+For the [Redgate SQLFluff rules Library](<Code Review Rules/Redgate SQLFluff Rules Library>) you will also find a "Configuration" section for rules where this is applicable.
 
 In order to configure these rules you would edit the SQLFluff configuration file
 
@@ -51,7 +51,7 @@ We could configure the rule to trigger a violation on the use of `TODO` in the S
 blocked_words = TODO
 ```
 # Local violation of policy
-Having configured your code analysis policy there may be occasions when you want to override the policy temporarily. There are a number of mechanisms available with varying degrees of granularity.
+Having configured your code review policy there may be occasions when you want to override the policy temporarily. There are a number of mechanisms available with varying degrees of granularity.
 
 ## Pipeline level
 This involves adding a manual approval step to your pipeline so if Flyway's `check -code` operation returns violations then it will require a review and approval step to proceed.
@@ -89,11 +89,11 @@ SeLeCt  1 from tBl ;    -- noqa: CP02,CP03
 ## Reporting `--noqa` Tag Usage
 {% include enterprise.html %}
 
-Using `--noqa` tags to suppress SQLFluff code analysis rules introduces risks, as those statements will bypass linting checks. 
+Using `--noqa` tags to suppress SQLFluff code review rules introduces risks, as those statements will bypass linting checks. 
 
-To help mitigate this, Flyway generates a warning-level violation whenever a `--noqa` tag is detected.
+To help mitigate this, Flyway generates a warning-level violation by default whenever a `--noqa` tag is detected. The severity of this violation can be configured using the [`flyway.check.code.noqaSeverity`](<Configuration/Flyway Namespace/Flyway Check Namespace/Flyway Check Code Noqa Severity Setting>) setting.
 
-In the command-line output, you will see something similar to the following:
+If this warning has not been set to `DISABLED`, In the command-line output you will see something similar to the following:
 
 ```
 +--------------------+-----------+------------------+----------+

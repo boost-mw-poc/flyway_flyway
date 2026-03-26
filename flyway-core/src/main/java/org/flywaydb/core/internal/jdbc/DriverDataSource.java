@@ -114,7 +114,11 @@ public class DriverDataSource implements DataSource {
                             Map<String, String> additionalProperties) throws FlywayException {
         this.url = detectFallbackUrl(url);
 
-        List<DatabaseType> typesAcceptingUrl = DatabaseTypeRegister.getDatabaseTypesForUrl(url, configuration);
+        List<DatabaseType> typesAcceptingUrl = DatabaseTypeRegister.getDatabaseTypesForUrl(url, configuration)
+            .stream()
+            .filter(DatabaseType.class::isInstance)
+            .map(DatabaseType.class::cast)
+            .toList();
 
         if (typesAcceptingUrl.isEmpty()) {
             throw new FlywayException("No Flyway database plugin found to handle " + DatabaseTypeRegister.redactJdbcUrl(url)

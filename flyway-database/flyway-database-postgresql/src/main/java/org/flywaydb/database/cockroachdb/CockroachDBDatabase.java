@@ -22,6 +22,7 @@ package org.flywaydb.database.cockroachdb;
 import org.flywaydb.core.api.MigrationVersion;
 import org.flywaydb.core.api.configuration.ClassicConfiguration;
 import org.flywaydb.core.api.configuration.Configuration;
+import org.flywaydb.core.internal.database.DatabaseType;
 import org.flywaydb.core.internal.database.DatabaseTypeRegister;
 import org.flywaydb.core.internal.database.base.Database;
 import org.flywaydb.core.internal.database.base.Table;
@@ -40,7 +41,7 @@ public class CockroachDBDatabase extends Database<CockroachDBConnection> {
 
     public CockroachDBDatabase(Configuration configuration, JdbcConnectionFactory jdbcConnectionFactory, StatementInterceptor statementInterceptor) {
         super(configuration, jdbcConnectionFactory, statementInterceptor);
-        this.determinedVersion = rawDetermineVersion(configuration);
+        this.determinedVersion = rawDetermineVersion(jdbcConnectionFactory.getDatabaseType());
     }
 
     @Override
@@ -72,11 +73,11 @@ public class CockroachDBDatabase extends Database<CockroachDBConnection> {
                 "CREATE INDEX IF NOT EXISTS \"" + table.getName() + "_s_idx\" ON " + table + " (\"success\");";
     }
 
-    private MigrationVersion rawDetermineVersion(Configuration configuration) {
+    private MigrationVersion rawDetermineVersion(DatabaseType databaseType) {
         String version;
         try {
             // Use rawMainJdbcConnection to avoid infinite recursion.
-            JdbcTemplate template = new JdbcTemplate(rawMainJdbcConnection, DatabaseTypeRegister.getDatabaseTypeForConnection(rawMainJdbcConnection, configuration));
+            JdbcTemplate template = new JdbcTemplate(rawMainJdbcConnection, databaseType);
             version = template.queryForString("SELECT value FROM crdb_internal.node_build_info where field='Version'");
             if (version == null) {
                 version = template.queryForString("SELECT value FROM crdb_internal.node_build_info where field='Tag'");

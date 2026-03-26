@@ -26,6 +26,7 @@ import org.flywaydb.core.api.MigrationVersion;
 import org.flywaydb.core.api.callback.Event;
 import org.flywaydb.core.api.configuration.Configuration;
 import org.flywaydb.core.api.output.BaselineResult;
+import org.flywaydb.core.internal.Topic;
 import org.flywaydb.core.internal.nc.NativeConnectorsDatabase;
 import org.flywaydb.core.internal.nc.schemahistory.SchemaHistoryItem;
 import org.flywaydb.core.extensibility.CachingVerbExtension;
@@ -123,7 +124,7 @@ public class BaselineVerbExtension extends CachingVerbExtension {
                         + baselineMarker.getDescription()
                         + ")\n"
                         + "Need to reset your baseline? Learn more: "
-                        + FlywayDbWebsiteLinks.RESET_THE_BASELINE_MIGRATION);
+                        + FlywayDbWebsiteLinks.getRedirectLinkFromTopic(Topic.REBASELINING));
                 }
             } else {
                 final boolean schemaPresent = context.getSchemaHistoryModel()
@@ -145,7 +146,7 @@ public class BaselineVerbExtension extends CachingVerbExtension {
                         + schemaHistoryText
                         + " as it already contains migrations\n"
                         + "Need to reset your baseline? Learn more: "
-                        + FlywayDbWebsiteLinks.RESET_THE_BASELINE_MIGRATION);
+                        + FlywayDbWebsiteLinks.getRedirectLinkFromTopic(Topic.REBASELINING));
                 }
                 if (context.getSchemaHistoryModel().getSchemaHistoryItems().isEmpty()) {
                     throw new FlywayException("Unable to baseline schema history table "
@@ -162,7 +163,7 @@ public class BaselineVerbExtension extends CachingVerbExtension {
                         + " as it already contains migrations.\n"
                         + "Delete the schema history table, and run baseline again.\n"
                         + "Need to reset your baseline? Learn more: "
-                        + FlywayDbWebsiteLinks.RESET_THE_BASELINE_MIGRATION);
+                        + FlywayDbWebsiteLinks.getRedirectLinkFromTopic(Topic.REBASELINING));
                 }
             }
         } catch (final FlywayException e) {
