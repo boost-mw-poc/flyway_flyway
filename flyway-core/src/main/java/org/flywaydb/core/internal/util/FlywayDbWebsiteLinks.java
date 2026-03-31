@@ -22,7 +22,6 @@ package org.flywaydb.core.internal.util;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.flywaydb.core.api.FlywayException;
@@ -87,27 +86,24 @@ public class FlywayDbWebsiteLinks {
     public static final String FEEDBACK_SURVEY_LINK_COMMUNITY = "https://rd.gt/4jVBMEa";
 
     private static String helpUrl(final Topic topic) {
-        return "https://help.red-gate.com/help/flyway-cli"
-            + VersionPrinter.getMajorVersion()
-            + "/help_"
-            + VersionPrinter.getMinorVersion()
-            + ".aspx?topic=" + topic.getEndpoint();
+        return getRedirectLinkFromTopic(topic).toString();
     }
 
-    public static Optional<URL> getRedirectLinkFromTopicString(final String topicString) {
-        for (final Topic topic : Topic.values()) {
-            if (topic.name().equalsIgnoreCase(topicString)) {
-                return Optional.of(getRedirectLinkFromTopic(topic));
-            }
-        }
-        return Optional.empty();
-    }
-
-    public static URL getRedirectLinkFromTopic(final Topic topic) {
+    public static URL getRedirectLinkFromSlug(final String slug) {
         try {
-            return URI.create(helpUrl(topic)).toURL();
+            final String url = "https://help.red-gate.com/help/flyway-cli"
+                + VersionPrinter.getMajorVersion()
+                + "/help_"
+                + VersionPrinter.getMinorVersion()
+                + ".aspx?topic="
+                + slug;
+            return URI.create(url).toURL();
         } catch (final MalformedURLException e) {
             throw new FlywayException(e);
         }
+    }
+
+    public static URL getRedirectLinkFromTopic(final Topic topic) {
+        return getRedirectLinkFromSlug(topic.getEndpoint());
     }
 }

@@ -1,6 +1,6 @@
 /*-
  * ========================LICENSE_START=================================
- * flyway-experimental-sqlite
+ * flyway-database-nc-sqlite
  * ========================================================================
  * Copyright (C) 2010 - 2026 Red Gate Software Ltd
  * ========================================================================
@@ -17,7 +17,7 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.flywaydb.experimental.sqlite;
+package org.flywaydb.nc.sqlite;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -36,7 +36,7 @@ import org.flywaydb.core.internal.parser.Parser;
 import org.flywaydb.core.internal.parser.ParsingContext;
 
 @CustomLog
-public class ExperimentalSqlite extends NativeConnectorsJdbc {
+public class NativeConnectorsSqlite extends NativeConnectorsJdbc {
 
     @Override
     public DatabaseSupport supportsUrl(final String url) {

@@ -86,6 +86,7 @@ This is the most granular change and just [ignores violation on an individual li
 SeLeCt  1 from tBl ;    -- noqa: CP02,CP03
 ```
 
+{% include anchor.html link="RedgatePolicyRules-NOQA"%}
 ## Reporting `--noqa` Tag Usage
 {% include enterprise.html %}
 

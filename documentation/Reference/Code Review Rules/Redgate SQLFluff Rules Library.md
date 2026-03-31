@@ -222,7 +222,7 @@ This will apply a simple suffix heuristic to check that table names do not end i
 {% include anchor.html link="RG20"%}
 # Rule: RG20 Unbracketed object names
 ## Check for object names not wrapped in square brackets
-It is good practice to wrap object names in square brackets to ensure compatibility with reserved keywords, special characters, and future changes.
+It is a good practice to wrap object names in square brackets to ensure compatibility with reserved keywords, special characters, and future changes.
 ### Groups: `all`, `redgate`
 ### Dialects supported: `TSQL`
 
@@ -252,5 +252,27 @@ required_table_prefix = ^tbl_
 required_view_prefix = ^vw_
 required_procedure_prefix = ^sp_
 required_function_prefix = ^fn_
+```
+
+---
+{% include anchor.html link="RG22"%}
+# Rule: RG22 CREATE and DROP same table
+## Detect when the same table is both created and dropped in the same script
+Creating and dropping the same table in the same script may indicate a mistake or redundant code. The direction at which the statements should be detected is configurable under mode.
+### Groups: `all`, `redgate`
+### Dialects supported: `all`
+### Configuration
+Configure the mode under `[sqlfluff:rules:redgate.create_drop_table_order]`.  An absent or empty value would default the mode to `Both` checking the statements in both directions
+
+| Mode | Description |
+|---|---|
+| `CreateThenDrop` | Flag when a table is created then dropped |
+| `DropThenCreate` | Flag when a table is dropped then created |
+| `Both` | Flag both patterns (default) |
+
+### Pattern
+```ini
+[sqlfluff:rules:redgate.create_drop_table_order]
+mode = Both
 ```
 

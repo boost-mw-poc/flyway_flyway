@@ -54,14 +54,25 @@ _Note_:
         "line_pos" : 1,
         "line_no_end" : 1,
         "line_pos_end" : 18,
+        "file_pos" : 0,
+        "file_pos_end" : 17,
         "description" : "Ensure delete statements have a condition attached.",
         "code" : "RG06",
         "warning" : false,
-        "help" : "https://help.red-gate.com/help/flyway-cli12/help_0.aspx?topic=rules/RG06"
+        "engine" : "SQLFluff",
+        "help" : "https://help.red-gate.com/help/flyway-cli12/help_0.aspx?topic=rules/RG06",
+        "fixes" : null
       } ]
     } ]
   } ]
 }
+```
+
+Suggested fix instructions may optionally be provided as an array on the `fixes` property of the JSON output for some issues. Individual fix instruction may take one of the following formats:
+```json
+{ "type": "delete", "file_pos": 0, "file_pos_end": 0 }
+{ "type": "replace", "file_pos": 0, "file_pos_end": 0, "content": "updated text" }
+{ "type": "insert", "file_pos": 0, "content": "inserted text" }
 ```
 
 ## Error codes

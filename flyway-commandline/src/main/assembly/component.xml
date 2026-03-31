@@ -243,7 +243,7 @@
         <include>org.flywaydb:flyway-verb-baseline</include>
         <include>org.flywaydb:flyway-verb-repair</include>
         <include>org.flywaydb:flyway-verb-testConnection</include>
-        <include>org.flywaydb:flyway-experimental-sqlite</include>
+        <include>org.flywaydb:flyway-database-nc-sqlite</include>
         <include>org.flywaydb:flyway-nc-callbacks</include>
         <include>org.flywaydb:flyway-database-nc-couchbase</include>
         <include>org.flywaydb:flyway-database-nc-mongodb</include>
