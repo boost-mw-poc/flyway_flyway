@@ -83,4 +83,9 @@ public interface SqlScript extends Comparable<SqlScript> {
      * Validates this SQL script.
      */
     void validate();
+
+    /**
+     * Whether to include referenced files in checksum calculation
+     */
+    boolean includeReferencedScriptsInChecksum();
 }

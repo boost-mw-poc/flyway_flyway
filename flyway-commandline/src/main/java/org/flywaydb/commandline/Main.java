@@ -237,6 +237,11 @@ public class Main {
                     commandLineArguments,
                     flywayTelemetryManager,
                     executionConfiguration);
+
+                if (operationResult == null) {
+                    continue;
+                }
+
                 individualResults.add(operationResult);
                 if (operationResult instanceof HtmlResult
                     && ((HtmlResult) operationResult).exceptionObject instanceof FlywayMigrateException) {
@@ -484,9 +489,6 @@ public class Main {
             .map(u -> u.getLeft().length() + 3)
             .orElse(11);
         LOG.info(indent + StringUtils.rightPad("help", padSize, ' ') + "Print this usage info and exit");
-
-
-
         LOG.info(indent + StringUtils.rightPad("migrate", padSize, ' ') + "Migrates the database");
         LOG.info(indent + StringUtils.rightPad("clean", padSize, ' ') + "Drops all objects in the configured schemas");
         LOG.info(indent

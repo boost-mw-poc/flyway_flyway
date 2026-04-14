@@ -57,11 +57,23 @@ public class SnowflakeConnection extends Connection<SnowflakeDatabase> {
     @Override
     protected String getCurrentSchemaNameOrSearchPath() throws SQLException {
         String schemaName = jdbcTemplate.queryForString("SELECT CURRENT_SCHEMA()");
-        return (schemaName != null) ? schemaName : "PUBLIC";
+        if (schemaName != null) {
+            return schemaName;
+        }
+        return getSchema("PUBLIC").exists() ? "PUBLIC" : null;
+    }
+
+    @Override
+    protected Schema doGetCurrentSchema() throws SQLException {
+        String schemaName = getCurrentSchemaNameOrSearchPath();
+        return schemaName != null ? getSchema(schemaName) : null;
     }
 
     @Override
     public void doChangeCurrentSchemaOrSearchPathTo(String schema) throws SQLException {
+        if (schema == null || schema.isEmpty()) {
+            return;
+        }
         jdbcTemplate.execute("USE SCHEMA " + database.doQuote(schema));
     }
 

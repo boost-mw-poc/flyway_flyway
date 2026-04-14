@@ -207,4 +207,9 @@ public class ParserSqlScript implements SqlScript {
     public int compareTo(SqlScript o) {
         return resource.getRelativePath().compareTo(o.getResource().getRelativePath());
     }
+
+    @Override
+    public boolean includeReferencedScriptsInChecksum() {
+        return parser.includeReferencedScriptsInChecksum();
+    }
 }

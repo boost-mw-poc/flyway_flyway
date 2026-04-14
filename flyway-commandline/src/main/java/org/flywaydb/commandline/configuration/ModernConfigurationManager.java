@@ -493,19 +493,6 @@ public class ModernConfigurationManager implements ConfigurationManager {
 
         final StringBuilder exceptionMessage = new StringBuilder();
         CoreErrorCode errorCode = CoreErrorCode.CONFIGURATION_RECOVERABLE;
-
-        missingParams.entrySet().removeIf(entry -> {
-            if ("plugins".equals(entry.getKey())) {
-                LOG.warn("The 'plugins' namespace for configuration parameters is no longer supported");
-                return true;
-            }
-            return false;
-        });
-
-        if (missingParams.isEmpty()) {
-            return;
-        }
-
         for (Map.Entry<String, ? extends List<String>> entry : missingParams.entrySet()) {
             String namespace = entry.getKey();
             List<String> unknownParams = entry.getValue();

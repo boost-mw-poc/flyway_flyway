@@ -8,6 +8,43 @@
 </div>
 <div class="col-md-9">
   <div class="release">
+        <h2 id="12.4.0">Flyway 12.4.0 (2026-04-14)</h2>
+
+        <h3>New features</h3>
+        <ul>
+            <li>Added a new rule: RG23 - Configurable forbidden alias names</li>
+            <li>Add a "checksumIncludeReferencedScripts" parameter under "Oracle" namespace to control whether referenced scripts are included in checksum calculation</li>
+        </ul>
+
+        <h3>Bug fixes</h3>
+        <ul>
+            <li>Fix NullPointerException when comparison engine returns null collection fields</li>
+            <li>in json output of check code, "file_pos", "file_pos_end" properties will now adjust for windows line endings present in scripts. Suggested fix content will now attempt to match the line endings used by the script.</li>
+            <li>Fix a bug where the "validate" operation may cause a "NullPointerException"</li>
+            <li>
+                <a href="https://github.com/flyway/flyway/issues/4221">Issue 4221</a>
+                Fixed Snowflake connectivity failure after JDBC driver update when PUBLIC schema does not exist
+            </li>
+            <li>fix CLI scoped namespace resolution when nested parameters are not immediately after their flag</li>
+            <li>Fixed incorrect file position returned in code review json for some types of sql fluff insertion fixes</li>
+        </ul>
+
+        <h3>Java compatibility</h3>
+        <ul>
+            <li>
+                <a href="https://github.com/flyway/flyway/issues/4223">Issue 4223</a>
+                Support the Gradle configuration cache in flyway-gradle-plugin
+            </li>
+        </ul>
+
+        <h3>Internal dependency</h3>
+        <ul>
+            <li>Upgraded RgCompare.Cli from 1.52.3.3436 to 1.52.6.3589</li>
+        </ul>
+
+  </div>
+
+  <div class="release">
         <h2 id="12.3.0">Flyway 12.3.0 (2026-03-31)</h2>
 
         <h3>New features</h3>
@@ -19,7 +56,6 @@
         <h3>Changes</h3>
         <ul>
             <li>Added additional properties to json output of check code: "engine", "file_pos", "file_pos_end" and (optional) "fixes".</li>
-            <li>Release note generation now reads from the database, enabling sub-product notes to be included</li>
         </ul>
 
         <h3>Bug fixes</h3>

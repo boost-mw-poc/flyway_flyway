@@ -133,6 +133,7 @@ public class SqlMigrationResolver implements MigrationResolver {
 
 
 
+
             Integer checksum = getChecksumForLoadableResource(repeatable, resources, resourceName, sqlScript.placeholderReplacement());
             Integer equivalentChecksum = getEquivalentChecksumForLoadableResource(repeatable, resources);
 

@@ -19,7 +19,7 @@ subtitle: Snowflake
 | **Supported versions**             | `4.0.2` and later                                                                                                                       |
 | **Default Java class**             | `net.snowflake.client.api.driver.SnowflakeDriver`                                                                                       |
 
-
+**Note:** The default schema is `PUBLIC` - if it does not exist or you want to use a different schema ensure you [set it in Flyway](<Configuration/Flyway Namespace/Flyway Default Schema Setting>)
 ## Java Usage
 Snowflake support is a separate dependency for Flyway and will need to be added to your Java project to access these features.
 Snowflake is found within the `flyway-database-snowflake` plugin module.

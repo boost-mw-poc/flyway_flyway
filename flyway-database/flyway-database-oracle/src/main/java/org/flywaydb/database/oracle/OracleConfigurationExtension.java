@@ -29,11 +29,13 @@ public class OracleConfigurationExtension implements ConfigurationExtension {
     private static final String ORACLE_SQLPLUS_WARN = "flyway.oracle.sqlplusWarn";
     private static final String ORACLE_KERBEROS_CACHE_FILE = "flyway.oracle.kerberosCacheFile";
     private static final String ORACLE_WALLET_LOCATION = "flyway.oracle.walletLocation";
+    private static final String ORACLE_CHECKSUM_INCLUDE_REFERENCED_SCRIPTS = "flyway.oracle.checksumIncludeReferencedScripts";
 
     private Boolean sqlplus = false;
     private Boolean sqlplusWarn = false;
     private String kerberosCacheFile;
     private String walletLocation;
+    private Boolean checksumIncludeReferencedScripts = true;
 
 
     @Override
@@ -52,6 +54,8 @@ public class OracleConfigurationExtension implements ConfigurationExtension {
                 return ORACLE_SQLPLUS_WARN;
             case "FLYWAY_ORACLE_WALLET_LOCATION":
                 return ORACLE_WALLET_LOCATION;
+            case "FLYWAY_ORACLE_CHECKSUM_INCLUDE_REFERENCED_SCRIPTS":
+                return ORACLE_CHECKSUM_INCLUDE_REFERENCED_SCRIPTS;
             default:
                 return null;
         }

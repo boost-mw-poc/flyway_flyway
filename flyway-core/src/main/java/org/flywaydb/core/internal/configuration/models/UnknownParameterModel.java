@@ -31,11 +31,25 @@ import org.flywaydb.core.internal.util.StringUtils;
 public record UnknownParameterModel(String rawKey, Reason reason, Source source, List<String> possibleValues, String replacement) {
     private static final String CLEAN_ON_VALIDATION_ERROR = "flyway.cleanOnValidationError";
     private static final String CHECK_MINOR_TOLERANCE = "check.minorTolerance";
+    private static final String CHECK_MAJOR_TOLERANCE = "check.majorTolerance";
     private static final String CHECK_MINOR_RULES = "check.minorRules";
     private static final String CHECK_MAJOR_RULES = "check.majorRules";
+    private static final String PLUGINS_CLEAN = "plugins.clean";
+    private static final String SQLSERVER_CLEAN = "flyway.sqlserver.clean";
+    private static final String PLUGINS_VAULT = "plugins.vault";
+    private static final String FLYWAY_VAULT = "flyway.vault";
+    private static final String PLUGINS_DAPR = "plugins.dapr";
+    private static final String FLYWAY_DAPR = "flyway.dapr";
+    private static final String PLUGINS_GCSM = "plugins.gcsm";
+    private static final String FLYWAY_GCSM = "flyway.gcsm";
 
     private static final Map<String, String> MOVED_OR_REMOVED_PARAMS = Map.ofEntries(
+        Map.entry(PLUGINS_CLEAN, SQLSERVER_CLEAN),
+        Map.entry(PLUGINS_VAULT, FLYWAY_VAULT),
+        Map.entry(PLUGINS_DAPR, FLYWAY_DAPR),
+        Map.entry(PLUGINS_GCSM, FLYWAY_GCSM),
         Map.entry(CLEAN_ON_VALIDATION_ERROR, ""),
+        Map.entry(CHECK_MAJOR_TOLERANCE, ""),
         Map.entry(CHECK_MINOR_TOLERANCE, ""),
         Map.entry(CHECK_MINOR_RULES, ""),
         Map.entry(CHECK_MAJOR_RULES, "")
@@ -55,7 +69,7 @@ public record UnknownParameterModel(String rawKey, Reason reason, Source source,
 
     public static UnknownParameterModel resolveUnknownParameter(final FlywayEnvironmentModel model,
         final String namespace, String key, String prefix) {
-        final String rawKey = prefix + key;
+        final String rawKey = getRawKey(namespace, key, prefix);
         final String configKey = namespace + "." + key;
 
         if (MOVED_OR_REMOVED_PARAMS.containsKey(configKey)) {
@@ -88,5 +102,13 @@ public record UnknownParameterModel(String rawKey, Reason reason, Source source,
                 yield "\tUnknown: '" + rawKey + "'." + " Check the parameter spelling and ensure Flyway is up to date.";
             }
         };
+    }
+
+    private static String getRawKey(final String namespace, final String key, final String prefix) {
+        if (prefix.endsWith(namespace + ".")) {
+            return prefix + key;
+        } else {
+            return prefix + namespace + "." + key;
+        }
     }
 }

@@ -276,3 +276,28 @@ Configure the mode under `[sqlfluff:rules:redgate.create_drop_table_order]`.  An
 mode = Both
 ```
 
+---
+{% include anchor.html link="RG23"%}
+# Rule: RG23 Forbidden alias names
+## Check that aliases do not use any configured forbidden words
+Certain words may be unsuitable as aliases, for example, reserved words, ambiguous abbreviations, or terms that violate naming conventions. Configure a comma-separated list of prohibited alias names; any alias matching an entry (case-insensitively) will be flagged, whether declared with or without the `AS` keyword. This rule applies to both table aliases and column aliases.
+### Groups: `all`, `redgate`
+### Dialects supported: `all`
+### Configuration
+`forbidden_aliases`: comma-separated list of alias names that are not permitted. Defaults to empty (no aliases are forbidden).
+
+```ini
+[sqlfluff:rules:redgate.forbidden_aliases]
+forbidden_aliases = Foo, Bar, Baz
+```
+### Pattern
+```sql
+SELECT column_name AS col FROM Orders AS o
+```
+### Anti-pattern
+```sql
+SELECT column_name AS Foo FROM Orders;
+SELECT * FROM Orders AS Foo;
+SELECT * FROM Orders Foo;
+```
+

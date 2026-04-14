@@ -455,6 +455,10 @@ public abstract class Parser {
         return false;
     }
 
+    public boolean includeReferencedScriptsInChecksum() {
+        return true;
+    }
+
     private Token readToken(PeekingReader reader, PositionTracker tracker, ParserContext context) throws IOException {
         int pos = tracker.getPos();
         int line = tracker.getLine();

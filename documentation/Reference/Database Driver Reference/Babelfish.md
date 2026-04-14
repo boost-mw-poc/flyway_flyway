@@ -15,6 +15,8 @@ subtitle: Babelfish
 
 Flyway automatically detects a Babelfish endpoint by querying `SERVERPROPERTY('Babelfish')` and activates Babelfish-specific behaviour.
 
+Babelfish reports itself as an older version of SQL Server so it is normal to see this in the console log:`"SQL Server 2014 is outside of Redgate community support"`
+
 ## Driver
 
 | Item                               | Details                                                                                                                              |
