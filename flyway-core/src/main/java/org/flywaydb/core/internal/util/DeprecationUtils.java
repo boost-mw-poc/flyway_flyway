@@ -32,8 +32,11 @@ public class DeprecationUtils {
         CLONE_PROVISIONER("Clone Provisioner", null, 13),
         CLONE_RESOLVER("Clone Resolver", null, 13),
         CHECK_BUILD_URL("check.buildUrl", "check.buildEnvironment", null),
-        CREATE_SCHEMA("'createSchema' callback", "beforeCreateSchema", null),
-        MONGODB_URL("jdbc:mongodb:// URL prefix", "mongodb://", null);
+        INIT_SQL("initSql", "'afterConnect' callback", null),
+        CREATE_SCHEMA("'createSchema' callback", "'beforeCreateSchema' callback", null),
+        MONGODB_URL("jdbc:mongodb:// URL prefix", "mongodb://", null),
+        CASSANDRA_URL("jdbc:cassandra:// URL prefix", "cassandra://", null),
+        CASSANDRA_JDBC("Cassandra JDBC connection", "Cassandra Native Connectors", null);
 
         private final String feature;
         private final String replacement;

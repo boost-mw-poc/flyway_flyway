@@ -23,6 +23,7 @@ import lombok.CustomLog;
 import org.flywaydb.core.api.FlywayException;
 import org.flywaydb.core.api.callback.Event;
 import org.flywaydb.core.api.configuration.Configuration;
+import org.flywaydb.core.api.output.OperationResult;
 import org.flywaydb.core.internal.nc.NativeConnectorsDatabase;
 import org.flywaydb.core.extensibility.VerbExtension;
 import org.flywaydb.nc.callbacks.CallbackManager;
@@ -32,13 +33,20 @@ import org.flywaydb.nc.preparation.PreparationContext;
 
 @CustomLog
 public class InfoVerbExtension implements VerbExtension {
+    private static final String COMMAND = "info";
+
     @Override
-    public boolean handlesVerb(final String verb) {
-        return "info".equals(verb);
+    public String getCommand() {
+        return COMMAND;
     }
 
     @Override
-    public Object executeVerb(final Configuration configuration) {
+    public String getDescription() {
+        return "Prints the information about applied, current and pending migrations";
+    }
+
+    @Override
+    public OperationResult executeVerb(final Configuration configuration) {
 
         final PreparationContext context = PreparationContext.get(configuration, false);
 

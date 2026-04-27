@@ -25,6 +25,7 @@ import lombok.CustomLog;
 import org.flywaydb.core.api.CoreMigrationType;
 import org.flywaydb.core.api.FlywayException;
 import org.flywaydb.core.api.configuration.Configuration;
+import org.flywaydb.core.api.output.OperationResult;
 import org.flywaydb.core.internal.nc.NativeConnectorsDatabase;
 import org.flywaydb.core.internal.nc.schemahistory.SchemaHistoryItem;
 import org.flywaydb.core.extensibility.CachingVerbExtension;
@@ -32,14 +33,21 @@ import org.flywaydb.nc.preparation.PreparationContext;
 
 @CustomLog
 public class SchemasVerbExtension extends CachingVerbExtension {
+    private static final String COMMAND = "schemas";
 
     @Override
-    public boolean handlesVerb(final String verb) {
-        return "schemas".equals(verb);
+    public String getCommand() {
+        return COMMAND;
+    }
+
+    // The schemas verb should not be reached through the command extension handling framework
+    @Override
+    public boolean handlesCommand(String command) {
+        return false;
     }
 
     @Override
-    public Object executeVerb(final Configuration configuration) {
+    public OperationResult executeVerb(final Configuration configuration) {
         final PreparationContext context = PreparationContext.get(configuration, cached);
         final NativeConnectorsDatabase database = context.getDatabase();
 

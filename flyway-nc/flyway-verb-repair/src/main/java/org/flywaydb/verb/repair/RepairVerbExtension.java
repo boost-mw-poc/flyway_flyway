@@ -28,6 +28,7 @@ import org.flywaydb.core.api.MigrationInfo;
 import org.flywaydb.core.api.MigrationState;
 import org.flywaydb.core.api.callback.Event;
 import org.flywaydb.core.api.configuration.Configuration;
+import org.flywaydb.core.api.output.OperationResult;
 import org.flywaydb.core.api.output.RepairOutput;
 import org.flywaydb.core.api.output.RepairResult;
 import org.flywaydb.core.internal.nc.NativeConnectorsDatabase;
@@ -42,13 +43,20 @@ import org.flywaydb.nc.preparation.PreparationContext;
 
 @CustomLog
 public class RepairVerbExtension implements VerbExtension {
+    private static final String COMMAND = "repair";
+
     @Override
-    public boolean handlesVerb(final String verb) {
-        return "repair".equals(verb);
+    public String getCommand() {
+        return COMMAND;
     }
 
     @Override
-    public Object executeVerb(final Configuration configuration) {
+    public String getDescription() {
+        return "Repairs the schema history table";
+    }
+
+    @Override
+    public OperationResult executeVerb(final Configuration configuration) {
 
         final PreparationContext context = PreparationContext.get(configuration, false);
 

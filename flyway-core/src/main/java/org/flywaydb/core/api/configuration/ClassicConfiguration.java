@@ -1451,7 +1451,9 @@ public class ClassicConfiguration implements Configuration {
         if (modernConfig.getEnvironments().containsKey(environment)) {
             getModernFlyway().setEnvironment(environment);
         } else {
-            throw new FlywayException("Environment '" + environment + "' not found");
+            final Optional<String> suggestion = findCaseInsensitiveEnvironmentMatch(environment);
+            throw new FlywayException("Environment '" + environment + "' not found."
+                + suggestion.map(s -> " Did you mean '" + s + "'?").orElse(""));
         }
     }
 
@@ -2068,12 +2070,19 @@ public class ClassicConfiguration implements Configuration {
             envName = "default";
         }
         if (!modernConfig.getEnvironments().containsKey(envName) && !"-".equals(envName)) {
-            throw new FlywayException("Environment '"
-                + envName
-                + "' not found. Check that this environment exists in your configuration.");
+            final Optional<String> suggestion = findCaseInsensitiveEnvironmentMatch(envName);
+            throw new FlywayException("Environment '" + envName
+                + "' not found. Check that this environment exists in your configuration."
+                + suggestion.map(s -> " Did you mean '" + s + "'?").orElse(""));
         }
 
         return envName;
+    }
+
+    private Optional<String> findCaseInsensitiveEnvironmentMatch(final String envName) {
+        return modernConfig.getEnvironments().keySet().stream()
+            .filter(key -> key.equalsIgnoreCase(envName))
+            .findFirst();
     }
 
     private EnvironmentModel getCurrentUnresolvedEnvironment() {
@@ -2084,16 +2093,6 @@ public class ClassicConfiguration implements Configuration {
         if (!url.toLowerCase(Locale.ROOT).startsWith("jdbc-secretsmanager:")) {
             return;
         }
-
-
-
-
-
-
-
-
-
-
 
 
 

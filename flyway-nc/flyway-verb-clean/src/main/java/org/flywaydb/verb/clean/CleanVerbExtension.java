@@ -28,6 +28,7 @@ import org.flywaydb.core.api.FlywayException;
 import org.flywaydb.core.api.callback.Event;
 import org.flywaydb.core.api.configuration.Configuration;
 import org.flywaydb.core.api.output.CleanResult;
+import org.flywaydb.core.api.output.OperationResult;
 import org.flywaydb.core.internal.nc.NativeConnectorsDatabase;
 import org.flywaydb.core.internal.nc.schemahistory.SchemaHistoryItem;
 import org.flywaydb.core.extensibility.VerbExtension;
@@ -36,13 +37,20 @@ import org.flywaydb.nc.callbacks.CallbackManager;
 import org.flywaydb.nc.preparation.PreparationContext;
 
 public class CleanVerbExtension implements VerbExtension {
+    private static final String COMMAND = "clean";
+
     @Override
-    public boolean handlesVerb(final String verb) {
-        return "clean".equals(verb);
+    public String getCommand() {
+        return COMMAND;
     }
 
     @Override
-    public Object executeVerb(final Configuration configuration) {
+    public String getDescription() {
+        return "Drops all objects in the configured schemas";
+    }
+
+    @Override
+    public OperationResult executeVerb(final Configuration configuration) {
         if (configuration.isCleanDisabled()) {
             throw new FlywayException(
                 "Unable to execute clean as it has been disabled with the 'flyway.cleanDisabled' property.");

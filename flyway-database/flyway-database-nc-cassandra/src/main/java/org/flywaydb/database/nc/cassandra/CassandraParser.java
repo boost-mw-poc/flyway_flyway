@@ -1,6 +1,6 @@
 /*-
  * ========================LICENSE_START=================================
- * flyway-verb-testConnection
+ * flyway-database-nc-cassandra
  * ========================================================================
  * Copyright (C) 2010 - 2026 Red Gate Software Ltd
  * ========================================================================
@@ -17,29 +17,14 @@
  * limitations under the License.
  * =========================LICENSE_END==================================
  */
-package org.flywaydb.verb.testConnection;
+package org.flywaydb.database.nc.cassandra;
 
-import static org.flywaydb.testconnection.TestConnectionCommandExtension.VERB;
-
-import org.flywaydb.core.api.FlywayException;
 import org.flywaydb.core.api.configuration.Configuration;
-import org.flywaydb.core.extensibility.VerbExtension;
-import org.flywaydb.nc.utils.VerbUtils;
+import org.flywaydb.core.internal.parser.Parser;
+import org.flywaydb.core.internal.parser.ParsingContext;
 
-public class testConnectionVerbExtension implements VerbExtension {
-    @Override
-    public boolean handlesVerb(final String verb) {
-        return VERB.equals(verb);
-    }
-
-    @Override
-    public Object executeVerb(final Configuration configuration) {
-        try (final var database = VerbUtils.getExperimentalDatabase(configuration)) {
-            // do nothing
-        } catch (final Exception e) {
-            throw new FlywayException("Connection failed", e);
-        }
-
-        return null;
+public class CassandraParser extends Parser {
+    protected CassandraParser(Configuration configuration, ParsingContext parsingContext) {
+        super(configuration, parsingContext, 3);
     }
 }

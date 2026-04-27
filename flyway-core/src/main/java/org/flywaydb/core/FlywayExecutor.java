@@ -23,6 +23,7 @@ import static org.flywaydb.core.api.callback.Event.AFTER_CONNECT;
 import static org.flywaydb.core.api.callback.Event.CREATE_SCHEMA;
 import static org.flywaydb.core.internal.database.DatabaseTypeRegister.redactJdbcUrl;
 import static org.flywaydb.core.internal.util.DataUnits.MEGABYTE;
+import static org.flywaydb.core.internal.util.DeprecationUtils.DeprecatedFeatures.INIT_SQL;
 import static org.flywaydb.core.internal.util.DeprecationUtils.printDeprecationNotice;
 
 import java.io.File;
@@ -163,6 +164,9 @@ public class FlywayExecutor {
             if (configuration.getInitSql() == null) {
                 return;
             }
+
+            printDeprecationNotice(INIT_SQL);
+
             final StringResource resource = new StringResource(configuration.getInitSql());
 
             final SqlScript sqlScript = sqlScriptFactory.createSqlScript(resource, true, resourceProvider);

@@ -19,7 +19,8 @@
  */
 package org.flywaydb.nc.utils;
 
-import java.sql.Connection;
+import static org.flywaydb.nc.utils.NativeConnectorsUtils.resolveAndVerifyNativeConnectorsDatabasePlugin;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,9 +40,6 @@ import org.flywaydb.core.api.configuration.Configuration;
 import org.flywaydb.core.api.resource.LoadableResource;
 import org.flywaydb.core.api.resource.LoadableResourceMetadata;
 import org.flywaydb.core.internal.nc.NativeConnectorsDatabase;
-import org.flywaydb.nc.NativeConnectorsDatabasePluginResolverImpl;
-import org.flywaydb.core.internal.jdbc.JdbcUtils;
-import org.flywaydb.nc.NativeConnectorsJdbc;
 import org.flywaydb.nc.migration.CompositeMigrationTypeResolver;
 import org.flywaydb.core.internal.nc.NativeConnectorsMigrationComparator;
 import org.flywaydb.nc.migration.MigrationScannerManager;
@@ -73,21 +71,21 @@ public class VerbUtils {
         return experimentalDatabase.getSchemaHistoryModel(configuration.getTable());
     }
 
-    public static NativeConnectorsDatabase getExperimentalDatabase(final Configuration configuration) throws SQLException {
-        final NativeConnectorsDatabase experimentalDatabase = resolveExperimentalDatabasePlugin(
+    public static NativeConnectorsDatabase getNativeConnectorsDatabase(final Configuration configuration) throws SQLException {
+        final NativeConnectorsDatabase database = resolveAndVerifyNativeConnectorsDatabasePlugin(
             configuration).orElseThrow(
             () -> new FlywayException("No Native Connectors database plugin found for the designated database"));
 
-        experimentalDatabase.initialize(getResolvedEnvironment(configuration), configuration);
+        database.initialize(getResolvedEnvironment(configuration), configuration);
         if (!databaseInfoPrinted) {
             LOG.info("Database: "
-                + experimentalDatabase.redactUrl(configuration.getUrl())
+                + database.redactUrl(configuration.getUrl())
                 + " ("
-                + experimentalDatabase.getDatabaseMetaData().productName()
+                + database.getDatabaseMetaData().productName()
                 + ")");
             databaseInfoPrinted = true;
         }
-        return experimentalDatabase;
+        return database;
     }
 
     public static MigrationInfo[] getMigrations(final SchemaHistoryModel schemaHistoryModel,
@@ -332,67 +330,4 @@ public class VerbUtils {
             .toList();
     }
 
-    private static Optional<NativeConnectorsDatabase> resolveExperimentalDatabasePlugin(final Configuration configuration) {
-        final List<NativeConnectorsDatabase> databases = new NativeConnectorsDatabasePluginResolverImpl(configuration.getPluginRegister()).resolve(configuration.getUrl());
-
-        if (databases.isEmpty()) {
-            return Optional.empty();
-        }
-
-        final Lazy<Connection> connection = new Lazy<>(() -> JdbcUtils.openConnection(configuration.getDataSource(),
-            configuration.getConnectRetries(),
-            configuration.getConnectRetriesInterval()));
-        final Optional<NativeConnectorsDatabase> result = databases.stream()
-            .filter((database) -> handlesConnection(database, connection))
-            .findFirst();
-
-        if (connection.isInitialized()) {
-            JdbcUtils.closeConnection(connection.get());
-        }
-
-        return result;
-    }
-
-    private static boolean handlesConnection(final NativeConnectorsDatabase database,
-        final Lazy<? extends Connection> connection) {
-        if (!(database instanceof final NativeConnectorsJdbc jdbcDatabase)) {
-            // Assume that a non JDBC database is valid for the url
-            return true;
-        }
-
-        try {
-            final String databaseProductName = connection.get().getMetaData().getDatabaseProductName();
-            if (jdbcDatabase.handlesProductName(connection.get(), databaseProductName)) {
-                return true;
-            }
-        } catch (final SQLException e) {
-            throw new FlywayException(e);
-        }
-
-        return false;
-    }
-}
-
-class Lazy<T> {
-    private T value;
-    private final java.util.function.Supplier<? extends T> supplier;
-
-    Lazy(final java.util.function.Supplier<? extends T> supplier) {
-        this.supplier = supplier;
-    }
-
-    public T get() {
-        if (!isInitialized()) {
-            try {
-                value = supplier.get();
-            } catch (final Exception e) {
-                throw new FlywayException("Failed to initialize lazy value", e);
-            }
-        }
-        return value;
-    }
-
-    boolean isInitialized() {
-        return value != null;
-    }
 }

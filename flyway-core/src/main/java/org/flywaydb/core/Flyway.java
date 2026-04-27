@@ -20,6 +20,7 @@
 package org.flywaydb.core;
 
 import static org.flywaydb.core.internal.nc.NativeConnectorsModeUtils.canUseNativeConnectors;
+import static org.flywaydb.core.internal.nc.NativeConnectorsModeUtils.findVerbExtension;
 
 import java.util.Collection;
 import lombok.CustomLog;
@@ -41,14 +42,12 @@ import org.flywaydb.core.extensibility.ConfigurationExtension;
 import org.flywaydb.core.extensibility.EventTelemetryModel;
 import org.flywaydb.core.extensibility.LicenseGuard;
 import org.flywaydb.core.extensibility.Tier;
-import org.flywaydb.core.extensibility.VerbExtension;
 import org.flywaydb.core.internal.Topic;
 import org.flywaydb.core.internal.callback.CallbackExecutor;
 import org.flywaydb.core.internal.command.*;
 import org.flywaydb.core.internal.command.clean.DbClean;
 import org.flywaydb.core.internal.database.base.Database;
 import org.flywaydb.core.internal.database.base.Schema;
-import org.flywaydb.core.internal.jdbc.JdbcConnectionFactory;
 import org.flywaydb.core.internal.resolver.CompositeMigrationResolver;
 import org.flywaydb.core.internal.schemahistory.SchemaHistory;
 import org.flywaydb.core.internal.util.CommandExtensionUtils;
@@ -165,8 +164,8 @@ public class Flyway {
     @SneakyThrows
     public MigrateResult migrate() throws FlywayException {
         try (final MigrateTelemetryModel telemetryModel = new MigrateTelemetryModel(flywayTelemetryManager)) {
-            if (canUseNativeConnectors(configuration, "migrate")) {
-                final var verb = configuration.getPluginRegister().getInstancesOf(VerbExtension.class).stream().filter(verbExtension -> verbExtension.handlesVerb("migrate")).findFirst();
+            if (canUseNativeConnectors(configuration)) {
+                final var verb = findVerbExtension(configuration, "migrate");
                 if (verb.isPresent()) {
                     LOG.debug("Native Connectors for migrate is set and a verb is present");
                     final var result = (MigrateResult) verb.get().executeVerb(configuration);
@@ -251,8 +250,8 @@ public class Flyway {
      * @throws FlywayException when the info retrieval failed.
      */
     public MigrationInfoService info() {
-        if (canUseNativeConnectors(configuration, "info")) {
-            final var verb = configuration.getPluginRegister().getInstancesOf(VerbExtension.class).stream().filter(verbExtension -> verbExtension.handlesVerb("info")).findFirst();
+        if (canUseNativeConnectors(configuration)) {
+            final var verb = findVerbExtension(configuration, "info");
             if (verb.isPresent()) {
                 LOG.debug("Native Connectors for info is set and a verb is present");
                 return (MigrationInfoService) verb.get().executeVerb(configuration);
@@ -281,8 +280,8 @@ public class Flyway {
     @SneakyThrows
     public CleanResult clean() {
         try (final EventTelemetryModel telemetryModel = new EventTelemetryModel("clean", flywayTelemetryManager)) {
-            if (canUseNativeConnectors(configuration, "clean")) {
-                final var verb = configuration.getPluginRegister().getInstancesOf(VerbExtension.class).stream().filter(verbExtension -> verbExtension.handlesVerb("clean")).findFirst();
+            if (canUseNativeConnectors(configuration)) {
+                final var verb = findVerbExtension(configuration, "clean");
                 if (verb.isPresent()) {
                     LOG.debug("Native Connectors for clean is set and a verb is present");
                     return (CleanResult) verb.get().executeVerb(configuration);
@@ -345,8 +344,8 @@ public class Flyway {
      * @throws FlywayException when something went wrong during validation.
      */
     public ValidateResult validateWithResult() throws FlywayException {
-        if (canUseNativeConnectors(configuration, "validate")) {
-            final var verb = configuration.getPluginRegister().getInstancesOf(VerbExtension.class).stream().filter(verbExtension -> verbExtension.handlesVerb("validate")).findFirst();
+        if (canUseNativeConnectors(configuration)) {
+            final var verb = findVerbExtension(configuration, "validate");
             if (verb.isPresent()) {
                 LOG.debug("Native Connectors for validate is set and a verb is present");
                 return (ValidateResult) verb.get().executeVerb(configuration);
@@ -375,8 +374,8 @@ public class Flyway {
     @SneakyThrows
     public BaselineResult baseline() throws FlywayException {
         try (final EventTelemetryModel telemetryModel = new EventTelemetryModel("baseline", flywayTelemetryManager)) {
-            if (canUseNativeConnectors(configuration, "baseline")) {
-                final var verb = configuration.getPluginRegister().getInstancesOf(VerbExtension.class).stream().filter(verbExtension -> verbExtension.handlesVerb("baseline")).findFirst();
+            if (canUseNativeConnectors(configuration)) {
+                final var verb = findVerbExtension(configuration, "baseline");
                 if (verb.isPresent()) {
                     LOG.debug("Native Connectors for baseline is set and a verb is present");
                     return (BaselineResult) verb.get().executeVerb(configuration);
@@ -424,8 +423,8 @@ public class Flyway {
     @SneakyThrows
     public RepairResult repair() throws FlywayException {
         try (final EventTelemetryModel telemetryModel = new EventTelemetryModel("repair", flywayTelemetryManager)) {
-            if (canUseNativeConnectors(configuration, "repair")) {
-                final var verb = configuration.getPluginRegister().getInstancesOf(VerbExtension.class).stream().filter(verbExtension -> verbExtension.handlesVerb("repair")).findFirst();
+            if (canUseNativeConnectors(configuration)) {
+                final var verb = findVerbExtension(configuration, "repair");
                 if (verb.isPresent()) {
                     LOG.debug("Native Connectors for repair is set and a verb is present");
                     return (RepairResult) verb.get().executeVerb(configuration);
@@ -461,8 +460,8 @@ public class Flyway {
      * @throws FlywayException when undo failed.
      */
     public OperationResult undo() throws FlywayException {
-        if (canUseNativeConnectors(configuration, "undo")) {
-            final var verb = configuration.getPluginRegister().getInstancesOf(VerbExtension.class).stream().filter(verbExtension -> verbExtension.handlesVerb("undo")).findFirst();
+        if (canUseNativeConnectors(configuration)) {
+            final var verb = findVerbExtension(configuration, "undo");
             if (verb.isPresent()) {
                 try (final EventTelemetryModel ignored = new EventTelemetryModel("undo", flywayTelemetryManager)) {
                     LOG.debug("Native Connectors for undo is set and a verb is present");

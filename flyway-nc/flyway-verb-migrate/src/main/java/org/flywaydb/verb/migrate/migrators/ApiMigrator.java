@@ -178,17 +178,18 @@ public class ApiMigrator extends Migrator<NativeConnectorsNonJdbc> {
                 }
 
                 if (migrationInfo instanceof final LoadableMigrationInfo loadableMigrationInfo) {
-                    final NonJdbcExecutorExecutionUnit initialUnit = reader.read(configuration,
+                    reader.read(configuration,
                         experimentalDatabase,
                         parsingContext,
                         loadableMigrationInfo.getLoadableResource(),
-                        null).findFirst().get();
-                    final NonJdbcExecutorExecutionUnit nonJdbcExecutorExecutionUnit = new NonJdbcExecutorExecutionUnit(
-                        initialUnit.getScript(),
-                        initialUnit.getContextPath(),
-                        initialUnit.getEncoding(),
-                        executeInTransaction);
-                    executor.execute(experimentalDatabase, nonJdbcExecutorExecutionUnit, configuration);
+                        null).forEach(unit -> {
+                            final NonJdbcExecutorExecutionUnit nonJdbcExecutorExecutionUnit = new NonJdbcExecutorExecutionUnit(
+                                unit.getScript(),
+                                unit.getContextPath(),
+                                unit.getEncoding(),
+                                executeInTransaction);
+                            executor.execute(experimentalDatabase, nonJdbcExecutorExecutionUnit, configuration);
+                        });
                     if(isLast) {
                         executor.finishExecution(experimentalDatabase, configuration);
                     }

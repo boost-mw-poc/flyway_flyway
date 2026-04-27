@@ -20,13 +20,13 @@
 package org.flywaydb.testconnection;
 
 import static org.flywaydb.core.internal.nc.NativeConnectorsModeUtils.canUseNativeConnectors;
-import static org.flywaydb.testconnection.TestConnectionCommandExtension.VERB;
 
 import lombok.CustomLog;
 import org.flywaydb.core.FlywayExecutor;
+import org.flywaydb.core.api.FlywayException;
 import org.flywaydb.core.api.configuration.Configuration;
 import org.flywaydb.core.extensibility.TestConnectionRunner;
-import org.flywaydb.core.extensibility.VerbExtension;
+import org.flywaydb.nc.utils.VerbUtils;
 
 @CustomLog
 public class FlywayTestConnectionRunner implements TestConnectionRunner {
@@ -36,21 +36,13 @@ public class FlywayTestConnectionRunner implements TestConnectionRunner {
     @Override
     public String testConnection(final Configuration configuration) {
 
-        if (canUseNativeConnectors(configuration, VERB)) {
-            final var verb = configuration.getPluginRegister()
-                .getInstancesOf(VerbExtension.class)
-                .stream()
-                .filter(verbExtension -> verbExtension.handlesVerb(VERB))
-                .findFirst();
-            if (verb.isPresent()) {
-                LOG.debug("Native Connectors for testConnection is set and a verb is present");
-
-                verb.get().executeVerb(configuration);
-
+        if (canUseNativeConnectors(configuration)) {
+            // Open-and-close to validate the connection
+            try (final var ignored = VerbUtils.getNativeConnectorsDatabase(configuration)) {
                 LOG.info(CONNECTION_SUCCESSFUL);
                 return "Flyway";
-            } else {
-                LOG.warn("Native Connectors for testConnection is set but no verb is present");
+            } catch (final Exception e) {
+                throw new FlywayException("Connection failed", e);
             }
         }
 

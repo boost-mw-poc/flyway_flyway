@@ -69,7 +69,7 @@ public class NullFlywayTelemetryManager implements FlywayTelemetryManager {
 
     }
 
-    public void notifyExperimentalModeChanged(boolean experimentalMode) {
+    public void notifyNativeConnectorsModeModeChanged(boolean nativeConnectorsMode) {
 
     }
 

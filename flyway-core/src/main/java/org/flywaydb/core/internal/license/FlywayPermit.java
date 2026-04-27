@@ -135,10 +135,10 @@ public class FlywayPermit implements Serializable {
         if (!REFRESH_TOKEN_FILE.exists() && PERMIT_FILE.exists() && authMethod == AuthMethod.ONLINE_AUTH) {
             if (permitFileOutdated(PERMIT_FILE)) {
                 LOG.info(
-                    "Flyway permit on disk is outdated and cannot be refreshed automatically because there is no refresh token on disk. Please rerun auth");
+                    "Flyway permit on disk is outdated and cannot be refreshed automatically because there is no refresh token on disk. Please rerun auth. For more information see: " + LICENSING_ACTIVATING_CLI);
             } else if (permitExpired()) {
                 LOG.info(
-                    "Flyway permit on disk is expired and cannot be refreshed automatically because there is no refresh token on disk. Please rerun auth");
+                    "Flyway permit on disk is expired and cannot be refreshed automatically because there is no refresh token on disk. Please rerun auth. For more information see: " + LICENSING_ACTIVATING_CLI);
             }
         }
 

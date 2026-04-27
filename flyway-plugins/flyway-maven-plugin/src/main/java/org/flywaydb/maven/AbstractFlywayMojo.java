@@ -19,7 +19,6 @@
  */
 package org.flywaydb.maven;
 
-import static org.flywaydb.core.internal.configuration.ConfigUtils.FLYWAY_PLUGINS_PREFIX;
 import static org.flywaydb.core.internal.configuration.ConfigUtils.putArrayIfSet;
 import static org.flywaydb.core.internal.configuration.ConfigUtils.putIfSet;
 
@@ -29,7 +28,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -857,9 +855,8 @@ abstract class AbstractFlywayMojo extends AbstractMojo {
             return conf;
         }
 
-        final String camelCaseRegex = "(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])";
         for (final String key : pluginConfiguration.keySet()) {
-            conf.put(FLYWAY_PLUGINS_PREFIX + String.join(".", key.split(camelCaseRegex)).toLowerCase(Locale.ROOT),
+            conf.put("flyway." + key,
                 pluginConfiguration.get(key));
         }
 

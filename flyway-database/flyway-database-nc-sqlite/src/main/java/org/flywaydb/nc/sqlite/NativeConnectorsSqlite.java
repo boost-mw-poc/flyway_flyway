@@ -47,11 +47,6 @@ public class NativeConnectorsSqlite extends NativeConnectorsJdbc {
     }
 
     @Override
-    public List<String> supportedVerbs() {
-        return List.of("info", "validate", "migrate", "clean", "undo", "baseline", "repair", "testConnection");
-    }
-
-    @Override
     public String getDatabaseType() {
         return "SQLite";
     }

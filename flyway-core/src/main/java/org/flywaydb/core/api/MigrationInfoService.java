@@ -19,10 +19,12 @@
  */
 package org.flywaydb.core.api;
 
+import org.flywaydb.core.api.output.OperationResult;
+
 /**
  * Info about all migrations, including applied, current and pending with details and status.
  */
-public interface MigrationInfoService extends InfoOutputProvider {
+public interface MigrationInfoService extends InfoOutputProvider, OperationResult {
     /**
      * Retrieves the full set of infos about applied, current and future migrations.
      *

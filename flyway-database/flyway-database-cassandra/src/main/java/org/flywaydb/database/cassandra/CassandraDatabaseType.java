@@ -21,6 +21,9 @@ package org.flywaydb.database.cassandra;
 
 import org.flywaydb.core.api.ResourceProvider;
 import org.flywaydb.core.api.configuration.Configuration;
+import static org.flywaydb.core.internal.util.DeprecationUtils.DeprecatedFeatures.CASSANDRA_JDBC;
+import static org.flywaydb.core.internal.util.DeprecationUtils.printDeprecationNotice;
+
 import org.flywaydb.core.internal.database.base.BaseDatabaseType;
 import org.flywaydb.core.internal.database.base.Database;
 import org.flywaydb.core.internal.jdbc.JdbcConnectionFactory;
@@ -59,7 +62,11 @@ public class CassandraDatabaseType extends BaseDatabaseType {
 
     @Override
     public boolean handlesDatabaseProductNameAndVersion(String databaseProductName, String databaseProductVersion, Connection connection) {
-        return databaseProductName.startsWith("Cassandra");
+        if (databaseProductName.startsWith("Cassandra")) {
+            printDeprecationNotice(CASSANDRA_JDBC);
+            return true;
+        }
+        return false;
     }
 
     @Override

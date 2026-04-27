@@ -20,7 +20,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.flywaydb</groupId>
   <artifactId>flyway-parent</artifactId>
-  <version>12.4.0</version>
+  <version>12.5.0</version>
   <packaging>pom</packaging>
   <name>${project.artifactId}</name>
   <description>Flyway: Database Migrations Made Easy.</description>
@@ -127,12 +127,15 @@
     <version.aws-java-sdk>2.32.22</version.aws-java-sdk> <!-- TODO: revert back to range once nexus is better -->
     <version.aws-secretsmanager>2.0.4</version.aws-secretsmanager>
     <version.azure-identity>1.15.4</version.azure-identity>
-    <version.bcpkix-jdk18on>1.80</version.bcpkix-jdk18on>
+    <version.azure-keyvault-secrets>4.9.2</version.azure-keyvault-secrets>
+    <version.bcpkix-jdk18on>1.84</version.bcpkix-jdk18on>
+    <version.build-helper-maven-plugin>3.6.1</version.build-helper-maven-plugin>
     <version.byte-buddy-agent>1.17.6</version.byte-buddy-agent>
-    <version.cassandra>4.13.0</version.cassandra>
+    <version.cassandra>4.16.3</version.cassandra>
     <version.commonslogging>1.2</version.commonslogging>
     <version.commonstext>1.10.0</version.commonstext>
     <version.commonslang3>3.18.0</version.commonslang3>
+    <version.couchbase>3.11.2</version.couchbase>
     <version.db2>11.5.0.0</version.db2>
     <version.derby>10.16.1.1</version.derby>
     <version.equinox>3.15.200</version.equinox>
@@ -144,7 +147,7 @@
     <version.h2>2.3.232</version.h2>
     <version.hamcrest>2.2</version.hamcrest>
     <version.hsqldb>2.7.2</version.hsqldb>
-    <version.ignite>2.13.0</version.ignite>
+    <version.ignite>2.17.0</version.ignite>
     <version.informix>4.50.3</version.informix>
     <version.jansi>1.18</version.jansi>
     <version.jackson>3.1.1</version.jackson>
@@ -236,6 +239,11 @@
         <groupId>tools.jackson.core</groupId>
         <artifactId>jackson-databind</artifactId>
         <version>${version.jackson}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>2.21.1</version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
@@ -487,6 +495,10 @@
             <groupId>com.github.jnr</groupId>
             <artifactId>jffi</artifactId>
           </exclusion>
+          <exclusion>
+            <groupId>com.datastax.oss</groupId>
+            <artifactId>java-driver-core</artifactId>
+          </exclusion>
         </exclusions>
       </dependency>
       <dependency>
@@ -518,6 +530,11 @@
         <groupId>com.microsoft.azure</groupId>
         <artifactId>msal4j-persistence-extension</artifactId>
         <version>${version.msal4j-persistence}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.couchbase.client</groupId>
+        <artifactId>java-client</artifactId>
+        <version>${version.couchbase}</version>
       </dependency>
       <dependency>
         <groupId>org.mongodb</groupId>
@@ -643,6 +660,11 @@
         <version>${version.azure-identity}</version>
       </dependency>
       <dependency>
+        <groupId>com.azure</groupId>
+        <artifactId>azure-security-keyvault-secrets</artifactId>
+        <version>${version.azure-keyvault-secrets}</version>
+      </dependency>
+      <dependency>
         <groupId>com.microsoft.azure</groupId>
         <artifactId>msal4j</artifactId>
         <version>${version.msal4j}</version>
@@ -742,7 +764,7 @@
       <dependency>
         <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-server</artifactId>
-        <version>12.1.6</version>
+        <version>12.1.7</version>
       </dependency>
       <dependency>
         <groupId>com.oracle.database.security</groupId>
@@ -846,7 +868,7 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>build-helper-maven-plugin</artifactId>
-          <version>1.12</version>
+          <version>${version.build-helper-maven-plugin}</version>
         </plugin>
       </plugins>
     </pluginManagement>

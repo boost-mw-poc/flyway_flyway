@@ -60,6 +60,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
+
 @CustomLog
 public class OracleDatabaseType extends BaseDatabaseType {
     // Oracle usernames/passwords can be 1-30 chars, can only contain alphanumerics and # _ $
@@ -119,7 +120,6 @@ public class OracleDatabaseType extends BaseDatabaseType {
 
 
 
-        return new OracleParser(configuration
 
 
 
@@ -130,8 +130,8 @@ public class OracleDatabaseType extends BaseDatabaseType {
 
 
 
-                , parsingContext
-        );
+         return new OracleParser(configuration, parsingContext);
+
     }
 
     @Override

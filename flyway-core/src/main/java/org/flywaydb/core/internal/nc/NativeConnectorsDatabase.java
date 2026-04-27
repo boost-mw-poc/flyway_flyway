@@ -64,8 +64,6 @@ public sealed interface NativeConnectorsDatabase<T> extends GeneralDatabaseType,
         return false;
     }
 
-    List<String> supportedVerbs();
-
     boolean supportsTransactions();
 
     boolean supportsBatch();

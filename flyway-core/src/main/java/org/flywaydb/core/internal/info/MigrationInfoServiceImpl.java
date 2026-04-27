@@ -41,7 +41,7 @@ import org.flywaydb.core.internal.util.Pair;
 
 import java.util.*;
 
-public class MigrationInfoServiceImpl implements MigrationInfoService, OperationResult {
+public class MigrationInfoServiceImpl implements MigrationInfoService {
     private final CompositeMigrationResolver migrationResolver;
     private final SchemaHistory schemaHistory;
     private final Database database;

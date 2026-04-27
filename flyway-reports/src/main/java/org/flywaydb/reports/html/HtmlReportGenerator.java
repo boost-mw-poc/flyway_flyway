@@ -21,7 +21,7 @@ package org.flywaydb.reports.html;
 
 import static org.flywaydb.core.internal.util.ClassUtils.getInstallDir;
 import static org.flywaydb.core.internal.util.FlywayDbWebsiteLinks.CHANGES_REPORT_LEARN_MORE;
-import static org.flywaydb.core.internal.util.FlywayDbWebsiteLinks.CODE_ANALYSIS_LEARN_MORE;
+import static org.flywaydb.core.internal.util.FlywayDbWebsiteLinks.CODE_REVIEW_LEARN_MORE;
 import static org.flywaydb.core.internal.util.FlywayDbWebsiteLinks.DRIFT_REPORT_LEARN_MORE;
 import static org.flywaydb.core.internal.util.FlywayDbWebsiteLinks.DRY_RUN_REPORT_LEARN_MORE;
 import static org.flywaydb.core.internal.util.FlywayDbWebsiteLinks.GIVE_FEEDBACK;
@@ -133,7 +133,7 @@ public class HtmlReportGenerator {
             .replace("{{DRIFT_REPORT_LEARN_MORE}}", DRIFT_REPORT_LEARN_MORE)
             .replace("{{INFO_REPORT_LEARN_MORE}}", INFO_REPORT_LEARN_MORE)
             .replace("{{MIGRATION_REPORT_LEARN_MORE}}", MIGRATION_REPORT_LEARN_MORE)
-            .replace("{{CODE_ANALYSIS_LEARN_MORE}}", CODE_ANALYSIS_LEARN_MORE)
+            .replace("{{CODE_REVIEW_LEARN_MORE}}", CODE_REVIEW_LEARN_MORE)
             .replace("{{GIVE_FEEDBACK}}", GIVE_FEEDBACK)
             .replace("{{UPGRADE_TO_REDGATE_FLYWAY}}", UPGRADE_TO_REDGATE_FLYWAY);
     }

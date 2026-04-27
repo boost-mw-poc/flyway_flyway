@@ -41,7 +41,7 @@ public interface FlywayTelemetryManager extends Plugin {
 
     void notifyDatabaseChanged(final String engine, final String version, final String hosting);
 
-    void notifyExperimentalModeChanged(final boolean experimentalMode);
+    void notifyNativeConnectorsModeModeChanged(final boolean nativeConnectorsMode);
 
     void notifyUserIdChanged(final String hashedUserId);
 

@@ -91,11 +91,6 @@ public class MongoDBDatabase extends NativeConnectorsNonJdbc {
     }
 
     @Override
-    public List<String> supportedVerbs() {
-        return List.of("info", "validate", "migrate", "clean", "undo", "baseline", "repair", "testConnection");
-    }
-
-    @Override
     public boolean isOnByDefault(final Configuration configuration) {
         return true;
     }

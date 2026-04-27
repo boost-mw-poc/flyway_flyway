@@ -8,6 +8,35 @@
 </div>
 <div class="col-md-9">
   <div class="release">
+        <h2 id="12.5.0">Flyway 12.5.0 (2026-04-27)</h2>
+
+        <h3>New features</h3>
+        <ul>
+            <li>Flyway now supports Azure Key Vault as a secrets resolver</li>
+            <li>Flyway now supports Native Connectors mode for Cassandra. The JDBC-based approach has been deprecated</li>
+        </ul>
+
+        <h3>Changes</h3>
+        <ul>
+            <li>`flyway prepare` with `-prepare.source=schemaModel` now fails with a clear error when the configured schema model directory does not exist</li>
+            <li>"initSql" has been deprecated. Please use the "afterConnect" callback instead</li>
+            <li>The Flyway Secret Manager feature is no longer available under Teams license</li>
+        </ul>
+
+        <h3>Bug fixes</h3>
+        <ul>
+            <li>Fix pluginConfigurations in the Maven and Gradle plugins not being handled by Flyway</li>
+            <li>Retry Informix table drops on ISAM file lock errors</li>
+        </ul>
+
+        <h3>Internal dependency</h3>
+        <ul>
+            <li>Upgraded RgCompare.Cli from 1.52.6.3589 to 1.55.1.3732</li>
+        </ul>
+
+  </div>
+
+  <div class="release">
         <h2 id="12.4.0">Flyway 12.4.0 (2026-04-14)</h2>
 
         <h3>New features</h3>

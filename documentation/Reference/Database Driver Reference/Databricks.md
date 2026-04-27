@@ -3,7 +3,7 @@ subtitle: Databricks
 ---
 
 - **Verified Versions:** N/A
-- **Maintainer:** {% include community-db.html %}
+- **Maintainer:** Red Gate
 
 ## Supported Versions and Support Levels
 
@@ -11,15 +11,14 @@ subtitle: Databricks
 
 ## Driver
 
-| Item                                | Details                                                                                                                                                                   |
-| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **URL format**                      | <code>jdbc:databricks://<i>host</i>:<i>port</i><i>/default;transportMode=http;ssl=1;httpPath=path;EnableArrow=0;AuthMech=3;UID=token;PWD=personal-access-token</i></code> |
-| **SSL support**                     | Not tested                                                                                                                                                                |
-| **Ships with Flyway Command-line**  | Yes                                                                                                                                                                       |
-| **Maven Central coordinates**       | `com.databricks:databricks-jdbc`                                                                                                                                          |
-| **Supported versions**              | `N/A`                                                                                                                                                                     |
-| **Default Java class**              | `com.databricks.client.jdbc.Driver`                                                                                                                                       |
-| **Flyway Community implementation** | [flyway-community-db-support](https://github.com/flyway/flyway-community-db-support/tree/main/flyway-database-databricks)                                                 |
+| Item                               | Details                                                                                                                                                                   |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **URL format**                     | <code>jdbc:databricks://<i>host</i>:<i>port</i><i>/default;transportMode=http;ssl=1;httpPath=path;EnableArrow=0;AuthMech=3;UID=token;PWD=personal-access-token</i></code> |
+| **SSL support**                    | Not tested                                                                                                                                                                |
+| **Ships with Flyway Command-line** | Yes                                                                                                                                                                       |
+| **Maven Central coordinates**      | `com.databricks:databricks-jdbc`                                                                                                                                          |
+| **Supported versions**             | `N/A`                                                                                                                                                                     |
+| **Default Java class**             | `com.databricks.client.jdbc.Driver`                                                                                                                                       |
 
 ## Java Usage
 
@@ -28,7 +27,17 @@ Databricks support is a separate dependency for Flyway and will need to be added
 
 ### Maven
 
-Database support
+#### Redgate
+
+```xml
+<dependency>
+    <groupId>com.redgate.flyway</groupId>
+    <artifactId>flyway-database-databricks</artifactId>
+</dependency>
+```
+
+#### Open Source
+
 ```xml
 <dependency>
     <groupId>org.flywaydb</groupId>
@@ -37,6 +46,18 @@ Database support
 ```
 
 ### Gradle
+
+#### Redgate
+
+```groovy
+buildscript {
+    dependencies {
+        implementation "com.redgate.flyway:flyway-database-databricks"
+    }
+}
+```
+
+#### Open Source
 
 ```groovy
 buildscript {

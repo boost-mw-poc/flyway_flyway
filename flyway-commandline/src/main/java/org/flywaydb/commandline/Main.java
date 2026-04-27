@@ -489,18 +489,6 @@ public class Main {
             .map(u -> u.getLeft().length() + 3)
             .orElse(11);
         LOG.info(indent + StringUtils.rightPad("help", padSize, ' ') + "Print this usage info and exit");
-        LOG.info(indent + StringUtils.rightPad("migrate", padSize, ' ') + "Migrates the database");
-        LOG.info(indent + StringUtils.rightPad("clean", padSize, ' ') + "Drops all objects in the configured schemas");
-        LOG.info(indent
-            + StringUtils.rightPad("info", padSize, ' ')
-            + "Prints the information about applied, current and pending migrations");
-        LOG.info(indent
-            + StringUtils.rightPad("validate", padSize, ' ')
-            + "Validates the applied migrations against the ones on the classpath");
-        LOG.info(indent
-            + StringUtils.rightPad("baseline", padSize, ' ')
-            + "Baselines an existing database at the baselineVersion");
-        LOG.info(indent + StringUtils.rightPad("repair", padSize, ' ') + "Repairs the schema history table");
         for (final Pair<String, String> usage : usages) {
             final List<String> lines = Arrays.stream(usage.getRight().split("\n")).map(String::trim).toList();
             LOG.info(indent + StringUtils.rightPad(usage.getLeft(), padSize, ' ') + lines.get(0));

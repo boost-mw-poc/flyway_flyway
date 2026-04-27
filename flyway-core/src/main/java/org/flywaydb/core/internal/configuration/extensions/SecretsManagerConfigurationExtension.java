@@ -25,7 +25,7 @@ import org.flywaydb.core.extensibility.ConfigurationExtension;
 public interface SecretsManagerConfigurationExtension extends ConfigurationExtension {
 
     @JsonIgnore
-    String getTelemetryName();
+    String getSecretManagerId();
 
     @JsonIgnore
     boolean isConfigured();

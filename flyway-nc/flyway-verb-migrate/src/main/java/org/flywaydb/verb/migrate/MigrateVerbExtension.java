@@ -37,6 +37,7 @@ import org.flywaydb.core.api.configuration.Configuration;
 import org.flywaydb.core.api.configuration.FluentConfiguration;
 import org.flywaydb.core.api.exception.FlywayValidateException;
 import org.flywaydb.core.api.output.MigrateResult;
+import org.flywaydb.core.api.output.OperationResult;
 import org.flywaydb.core.api.output.ValidateResult;
 import org.flywaydb.core.api.pattern.ValidatePattern;
 import org.flywaydb.core.internal.Topic;
@@ -59,14 +60,20 @@ import org.flywaydb.verb.validate.ValidateVerbExtension;
 
 @CustomLog
 public class MigrateVerbExtension implements VerbExtension {
+    private static final String COMMAND = "migrate";
 
     @Override
-    public boolean handlesVerb(final String verb) {
-        return "migrate".equals(verb);
+    public String getCommand() {
+        return COMMAND;
     }
 
     @Override
-    public Object executeVerb(final Configuration configuration) {
+    public String getDescription() {
+        return "Migrates the database";
+    }
+
+    @Override
+    public OperationResult executeVerb(final Configuration configuration) {
 
         final PreparationContext context = PreparationContext.get(configuration, false);
 

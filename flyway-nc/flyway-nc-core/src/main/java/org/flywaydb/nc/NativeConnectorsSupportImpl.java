@@ -21,7 +21,7 @@ package org.flywaydb.nc;
 
 import static org.flywaydb.core.internal.nc.NativeConnectorsModeUtils.isNativeConnectorsTurnedOff;
 import static org.flywaydb.core.internal.nc.NativeConnectorsModeUtils.isNativeConnectorsTurnedOn;
-import static org.flywaydb.nc.utils.NativeConnectorsUtils.resolveExperimentalDatabasePlugin;
+import static org.flywaydb.nc.utils.NativeConnectorsUtils.resolveNativeConnectorsDatabasePlugin;
 
 import java.util.Optional;
 import lombok.CustomLog;
@@ -34,7 +34,7 @@ import org.flywaydb.core.internal.configuration.ConfigurationValidator;
 @CustomLog
 public class NativeConnectorsSupportImpl implements NativeConnectorsSupport {
     @Override
-    public boolean canUseNativeConnectors(final Configuration configuration, final String verb) {
+    public boolean canUseNativeConnectors(final Configuration configuration) {
         if (isNativeConnectorsTurnedOff()) {
             return false;
         }
@@ -45,11 +45,13 @@ public class NativeConnectorsSupportImpl implements NativeConnectorsSupport {
 
         new ConfigurationValidator().validate(configuration);
 
-        final Optional<NativeConnectorsDatabase> database = resolveExperimentalDatabasePlugin(configuration);
+        final Optional<NativeConnectorsDatabase> database = resolveNativeConnectorsDatabasePlugin(configuration);
 
-        final boolean canUseNativeConnectors =  database.map(experimentalDatabase -> experimentalDatabase.supportedVerbs().contains(verb) &&
-                (experimentalDatabase.isOnByDefault(configuration) || isNativeConnectorsTurnedOn()))
-            .orElse(false);
+        if (database.isEmpty()) {
+            return false;
+        }
+
+        final boolean canUseNativeConnectors = isNativeConnectorsTurnedOn() || database.get().isOnByDefault(configuration);
 
         if (canUseNativeConnectors && useLegacyAsDryRunSet(configuration)) {
             if (database.get() instanceof NativeConnectorsNonJdbc) {
@@ -65,16 +67,24 @@ public class NativeConnectorsSupportImpl implements NativeConnectorsSupport {
 
     @Override
     public boolean canCreateDataSource(final Configuration configuration) {
-        if (!isNativeConnectorsTurnedOff()) {
-            if (configuration.getUrl() == null) {
-                return true;
-            }
+        if (isNativeConnectorsTurnedOff()) {
+            return true;
+        }
 
-            Optional<NativeConnectorsDatabase> database = resolveExperimentalDatabasePlugin(configuration);
+        if (configuration.getUrl() == null) {
+            return true;
+        }
 
-            return database.map(experimentalDatabase -> experimentalDatabase.canCreateJdbcDataSource()
-                    || !experimentalDatabase.isOnByDefault(configuration))
-                .orElse(true);
+        Optional<NativeConnectorsDatabase> database = resolveNativeConnectorsDatabasePlugin(configuration);
+
+        if (database.isEmpty()) {
+            return true;
+        }
+
+        final boolean canUseNativeConnectors = isNativeConnectorsTurnedOn() || database.get().isOnByDefault(configuration);
+
+        if (canUseNativeConnectors) {
+            return database.get().canCreateJdbcDataSource();
         }
 
         return true;

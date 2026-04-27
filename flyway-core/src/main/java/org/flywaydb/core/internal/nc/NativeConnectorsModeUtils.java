@@ -19,19 +19,20 @@
  */
 package org.flywaydb.core.internal.nc;
 
+import java.util.Optional;
 import lombok.CustomLog;
 import org.flywaydb.core.api.configuration.Configuration;
+import org.flywaydb.core.extensibility.VerbExtension;
 
 @CustomLog
 public class NativeConnectorsModeUtils {
-
-    public static boolean canUseNativeConnectors(final Configuration config,  final String verb) {
+    public static boolean canUseNativeConnectors(final Configuration config) {
         final NativeConnectorsSupport supportChecker = config.getPluginRegister().getInstanceOf(
             NativeConnectorsSupport.class);
         if (supportChecker == null) {
             return false;
         }
-        return supportChecker.canUseNativeConnectors(config, verb);
+        return supportChecker.canUseNativeConnectors(config);
     }
 
     public static boolean canCreateDataSource(final Configuration config) {
@@ -49,5 +50,12 @@ public class NativeConnectorsModeUtils {
 
     public static boolean isNativeConnectorsTurnedOff() {
         return System.getenv("FLYWAY_NATIVE_CONNECTORS") != null && System.getenv("FLYWAY_NATIVE_CONNECTORS").equalsIgnoreCase("false");
+    }
+
+    public static Optional<VerbExtension> findVerbExtension(final Configuration configuration, final String command) {
+        return configuration.getPluginRegister()
+            .getInstancesOf(VerbExtension.class).stream()
+            .filter(verbExtension -> verbExtension.handlesCommand(command))
+            .findFirst();
     }
 }

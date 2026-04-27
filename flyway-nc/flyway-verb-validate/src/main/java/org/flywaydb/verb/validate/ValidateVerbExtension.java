@@ -31,6 +31,7 @@ import org.flywaydb.core.api.MigrationState;
 import org.flywaydb.core.api.MigrationVersion;
 import org.flywaydb.core.api.callback.Event;
 import org.flywaydb.core.api.configuration.Configuration;
+import org.flywaydb.core.api.output.OperationResult;
 import org.flywaydb.core.api.output.ValidateOutput;
 import org.flywaydb.core.api.output.ValidateResult;
 import org.flywaydb.core.internal.nc.NativeConnectorsDatabase;
@@ -46,14 +47,20 @@ import org.flywaydb.nc.preparation.PreparationContext;
 
 @CustomLog
 public class ValidateVerbExtension extends CachingVerbExtension {
+    private static final String COMMAND = "validate";
 
     @Override
-    public boolean handlesVerb(final String verb) {
-        return "validate".equals(verb);
+    public String getCommand() {
+        return COMMAND;
     }
 
     @Override
-    public Object executeVerb(final Configuration configuration) {
+    public String getDescription() {
+        return "Validates the applied migrations against the ones on the classpath";
+    }
+
+    @Override
+    public OperationResult executeVerb(final Configuration configuration) {
         final StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 

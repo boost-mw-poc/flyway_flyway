@@ -23,6 +23,6 @@ import org.flywaydb.core.api.configuration.Configuration;
 import org.flywaydb.core.extensibility.Plugin;
 
 public interface NativeConnectorsSupport extends Plugin {
-    boolean canUseNativeConnectors(Configuration configuration, String verb);
+    boolean canUseNativeConnectors(Configuration configuration);
     boolean canCreateDataSource(Configuration configuration);
 }

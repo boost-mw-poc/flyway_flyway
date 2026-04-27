@@ -20,7 +20,7 @@
 package org.flywaydb.nc.preparation;
 
 import static org.flywaydb.core.internal.util.TelemetryUtils.getTelemetryManager;
-import static org.flywaydb.nc.utils.NativeConnectorsUtils.logExperimentalDataTelemetry;
+import static org.flywaydb.nc.utils.NativeConnectorsUtils.logNativeConnectorsDataTelemetry;
 
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -39,7 +39,6 @@ import org.flywaydb.core.internal.nc.NativeConnectorsDatabase;
 import org.flywaydb.core.internal.nc.schemahistory.SchemaHistoryModel;
 import org.flywaydb.core.extensibility.Plugin;
 import org.flywaydb.core.internal.parser.ParsingContext;
-import org.flywaydb.nc.utils.NativeConnectorsUtils;
 import org.flywaydb.nc.utils.VerbUtils;
 
 @Getter
@@ -63,7 +62,7 @@ public final class PreparationContext implements Plugin {
 
     public void initialize(final Configuration configuration) {
         try {
-            database = VerbUtils.getExperimentalDatabase(configuration);
+            database = VerbUtils.getNativeConnectorsDatabase(configuration);
 
             parsingContext = new ParsingContext();
             parsingContext.populate(database, configuration);
@@ -98,7 +97,7 @@ public final class PreparationContext implements Plugin {
 
             schemaHistoryModel = (SchemaHistoryModel) getFromFuture(schemaHistoryModelFuture);
 
-            CompletableFuture.runAsync(() -> logExperimentalDataTelemetry(getTelemetryManager(
+            CompletableFuture.runAsync(() -> logNativeConnectorsDataTelemetry(getTelemetryManager(
                 configuration), database.getDatabaseMetaData()));
 
             cacheString = getCacheString(configuration);
@@ -126,7 +125,7 @@ public final class PreparationContext implements Plugin {
     public void refresh(final Configuration configuration) {
         if (database.isClosed()) {
             try {
-                database = VerbUtils.getExperimentalDatabase(configuration);
+                database = VerbUtils.getNativeConnectorsDatabase(configuration);
             } catch (final SQLException sqlException) {
                 throw new FlywayException(sqlException);
             }

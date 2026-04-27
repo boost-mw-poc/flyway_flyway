@@ -42,7 +42,7 @@ public enum Topic {
     FILE_ENCODING_HELP("reference/configuration/flyway-namespace/flyway-encoding-setting"),
     TEAMS_ENTERPRISE_DOWNLOAD("reference/usage/command-line"),
     CHANGES_REPORT("deploying-database-changes-using-flyway/generating-a-deployment-changes-report"),
-    CODE_ANALYSIS("reference/commands/check"),
+    CODE_REVIEW("reference/commands/check"),
     DRIFT_REPORT("reference/commands/check"),
     DRY_RUN_REPORT("reference/commands/check"),
     INFO_REPORT("reference/commands/info"),
@@ -55,6 +55,26 @@ public enum Topic {
     LICENSING_ACTIVATING_CLI("getting-started-with-flyway/system-requirements/licensing"),
     OFFLINE_LICENSE_PERMITS("getting-started-with-flyway/system-requirements/licensing/license-permits"),
     NATIVE_CONNECTORS_MONGODB("reference/database-driver-reference/mongodb-native-connectors"),
+
+    // Non-documentation links (product pages, external sites, surveys, blogs)
+    TRY_TEAMS_EDITION("try-teams-edition"),
+    REDGATE_EDITION_DOWNLOAD("redgate-edition-download"),
+    TRIAL_UPGRADE("trial-upgrade"),
+    UPGRADE_TO_REDGATE_FLYWAY("upgrade-to-redgate-flyway"),
+    EULA("eula"),
+    ENTERPRISE_INFO("enterprise-info"),
+    SQLFLUFF_CONFIGURATION("sqlfluff-configuration"),
+    TOML_HELP("toml-help"),
+    SQL_PLUS_DOWNLOAD("sql-plus"),
+    MONGOSH("mongosh"),
+    OSS_DOCKER_REPOSITORY("oss-docker-repository"),
+    COMMUNITY_SUPPORT("community-support"),
+    COMMUNITY_CONTRIBUTED_DATABASES("community-contributed-databases"),
+    ORACLE_BLOG("flyway-blog/flyway-native-connectors-oracle"),
+    V10_BLOG("v10-blog"),
+    GIVE_FEEDBACK("release-notes-and-older-versions/feedback"),
+    FEEDBACK_SURVEY_ENTERPRISE("feedback-survey-enterprise"),
+    FEEDBACK_SURVEY_COMMUNITY("feedback-survey-community"),
 
     // Concepts
     CHECK_CODE("check-code");

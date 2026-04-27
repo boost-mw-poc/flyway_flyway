@@ -19,7 +19,6 @@
  */
 package org.flywaydb.nc;
 
-import java.util.List;
 import java.util.Optional;
 import org.flywaydb.core.api.configuration.Configuration;
 import org.flywaydb.core.internal.nc.NativeConnectorsDatabase;
@@ -27,5 +26,5 @@ import org.flywaydb.core.internal.nc.NativeConnectorsDatabase;
 public interface NativeConnectorsDatabasePluginResolver {
     Optional<NativeConnectorsDatabase> resolve(Configuration configuration);
 
-    List<NativeConnectorsDatabase> resolve(String url);
+    Optional<NativeConnectorsDatabase> resolveAndVerify(Configuration configuration);
 }

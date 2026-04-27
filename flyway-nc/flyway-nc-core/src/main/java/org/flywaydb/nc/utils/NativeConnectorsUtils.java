@@ -27,18 +27,23 @@ import org.flywaydb.nc.NativeConnectorsDatabasePluginResolverImpl;
 import org.flywaydb.core.internal.nc.MetaData;
 
 public class NativeConnectorsUtils {
-    public static void logExperimentalDataTelemetry(final FlywayTelemetryManager flywayTelemetryManager, final MetaData metaData) {
+    public static void logNativeConnectorsDataTelemetry(final FlywayTelemetryManager flywayTelemetryManager, final MetaData metaData) {
         if (flywayTelemetryManager != null) {
             flywayTelemetryManager.notifyDatabaseChanged(metaData.databaseType(),
                 metaData.version().toString(),
                 null);
 
-            flywayTelemetryManager.notifyExperimentalModeChanged(true);
+            flywayTelemetryManager.notifyNativeConnectorsModeModeChanged(true);
         }
     }
 
-    public static Optional<NativeConnectorsDatabase> resolveExperimentalDatabasePlugin(final Configuration configuration) {
+    public static Optional<NativeConnectorsDatabase> resolveNativeConnectorsDatabasePlugin(final Configuration configuration) {
         return new NativeConnectorsDatabasePluginResolverImpl(configuration.getPluginRegister())
             .resolve(configuration);
+    }
+
+    public static Optional<NativeConnectorsDatabase> resolveAndVerifyNativeConnectorsDatabasePlugin(final Configuration configuration) {
+        return new NativeConnectorsDatabasePluginResolverImpl(configuration.getPluginRegister())
+            .resolveAndVerify(configuration);
     }
 }
